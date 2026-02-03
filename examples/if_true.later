@@ -1,0 +1,6 @@
+// If with true condition
+if true {
+    "yes"
+} else {
+    "no"
+}

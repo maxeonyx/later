@@ -1,0 +1,8 @@
+// Linear value passed to function - ownership transfers
+fn consume-file(file) {
+    file | close
+    "consumed in function"
+}
+
+let f = open("data.txt")
+consume-file(f)

@@ -1,0 +1,11 @@
+// Nested spawn - child tasks complete before parent
+let mut log = []
+
+spawn {
+    spawn {
+        log = [...log, "inner: 1"]
+    } | await
+    log = [...log, "outer: 2"]
+} | await
+
+log | join("\n")

@@ -1,0 +1,14 @@
+// Loop with continue (skip even numbers)
+let mut result = []
+let mut i = 0
+loop {
+    i = i + 1
+    if i > 10 {
+        break
+    }
+    if i % 2 == 0 {
+        continue
+    }
+    result = [...result, i]
+}
+result

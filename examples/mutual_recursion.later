@@ -1,0 +1,18 @@
+// Mutual recursion - is-even and is-odd
+fn is-even(n) {
+    if n == 0 {
+        true
+    } else {
+        is-odd(n - 1)
+    }
+}
+
+fn is-odd(n) {
+    if n == 0 {
+        false
+    } else {
+        is-even(n - 1)
+    }
+}
+
+is-even(10)

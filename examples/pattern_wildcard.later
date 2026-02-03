@@ -1,0 +1,3 @@
+// Wildcard pattern discards value
+let [_, kept, _] = [1, "kept", 3]
+kept

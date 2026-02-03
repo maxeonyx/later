@@ -1,0 +1,17 @@
+// Timeout as structured concurrency
+let result = [
+    spawn {
+        sleep(1000)
+        "slow"
+    },
+    spawn {
+        sleep(10)
+        timeout
+    },
+] | race | await
+
+if result == timeout {
+    "timed out"
+} else {
+    result
+}

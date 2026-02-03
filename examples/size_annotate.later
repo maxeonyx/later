@@ -1,0 +1,3 @@
+// Size annotation on a value
+let x: Size(16) = make-buffer(16)
+"size: " + x | size | to-string

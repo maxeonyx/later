@@ -1,0 +1,6 @@
+// ERROR: Linear value returned from function not consumed
+fn get-resource() {
+    open("data.txt")
+}
+
+get-resource()  // returned value never consumed!

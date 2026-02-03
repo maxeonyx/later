@@ -1,0 +1,19 @@
+// Multiple effect handlers
+let effect-a = symbol()
+let effect-b = symbol()
+
+fn do-effects() {
+    let a = send effect-a with 1
+    let b = send effect-b with 2
+    "a: " + a | to-string + ", b: " + b | to-string
+}
+
+handle {
+    handle {
+        do-effects()
+    } effect-a v {
+        continue with v
+    }
+} effect-b v {
+    continue with v
+}

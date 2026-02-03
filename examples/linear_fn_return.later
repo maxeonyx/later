@@ -1,0 +1,8 @@
+// Function returns linear value - caller must consume
+fn get-resource() {
+    open("data.txt")
+}
+
+let f = get-resource()
+f | close
+"done"

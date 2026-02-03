@@ -1,0 +1,5 @@
+// Comments are ignored
+// This is a comment
+let x = 42  // inline comment
+// Another comment
+x

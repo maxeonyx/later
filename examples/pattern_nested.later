@@ -1,0 +1,3 @@
+// Nested destructuring
+let { data: [_, value] } = { data: [0, 42] }
+value

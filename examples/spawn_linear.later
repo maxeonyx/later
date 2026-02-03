@@ -1,0 +1,13 @@
+// Spawned task owns linear resource and cleans it up
+let mut result = ""
+
+spawn {
+    let resource = open("data.txt")
+    defer {
+        resource | close
+        result = "resource cleaned up"
+    }
+    // do some work...
+} | await
+
+result

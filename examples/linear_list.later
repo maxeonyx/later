@@ -1,0 +1,10 @@
+// Linear values in a list - all must be consumed
+let files = [
+    open("a.txt"),
+    open("b.txt"),
+    open("c.txt"),
+]
+files[0] | close
+files[1] | close
+files[2] | close
+"done"

@@ -1,0 +1,18 @@
+// Effect with cleanup that runs even on propagation
+let error = symbol()
+let mut cleanup-ran = false
+
+let result = handle {
+    handle {
+        defer { cleanup-ran = true }
+        send error with "boom"
+    }
+} error e {
+    if cleanup-ran {
+        "cleanup ran\nerror: " + e
+    } else {
+        "cleanup did NOT run"
+    }
+}
+
+result

@@ -1,0 +1,9 @@
+// If-else-if chain
+let x = 5
+if x < 3 {
+    "low"
+} else if x < 7 {
+    "middle"
+} else {
+    "high"
+}

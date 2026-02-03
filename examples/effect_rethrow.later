@@ -1,0 +1,20 @@
+// Effect rethrow - catch and rethrow with modification
+let error = symbol()
+
+fn inner() {
+    send error with "inner error"
+}
+
+fn middle() {
+    handle {
+        inner()
+    } error e {
+        send error with "outer caught: " + e
+    }
+}
+
+handle {
+    middle()
+} error e {
+    e
+}

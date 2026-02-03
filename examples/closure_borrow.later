@@ -1,0 +1,4 @@
+// Closure can capture a borrow
+let data = { value: 42 }
+let get-value = fn() &data.value
+get-value()

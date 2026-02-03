@@ -1,0 +1,9 @@
+// Closure captures mutable variable
+let mut count = 0
+let increment = fn() {
+    count = count + 1
+}
+increment()
+increment()
+increment()
+count

@@ -1,0 +1,2 @@
+// Trailing comma in list is allowed
+[1, 2, 3,]

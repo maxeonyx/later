@@ -393,3 +393,385 @@ fn test_startup_config() {
     // Startup stage ingests config
     expect_output("startup.later", "configured: production");
 }
+
+// =============================================================================
+// PHASE 1: Control Flow
+// =============================================================================
+
+#[test]
+fn test_if_true() {
+    expect_output("if_true.later", "yes");
+}
+
+#[test]
+fn test_if_false() {
+    expect_output("if_false.later", "no");
+}
+
+#[test]
+fn test_if_else_if() {
+    expect_output("if_else_if.later", "middle");
+}
+
+#[test]
+fn test_if_expression_value() {
+    // if/else is an expression that returns a value
+    expect_output("if_expr.later", "10");
+}
+
+#[test]
+fn test_loop_basic() {
+    expect_output("loop_basic.later", "5");
+}
+
+#[test]
+fn test_loop_break_with_value() {
+    expect_output("loop_break_value.later", "42");
+}
+
+#[test]
+fn test_loop_continue() {
+    expect_output("loop_continue.later", "[1, 3, 5, 7, 9]");
+}
+
+// =============================================================================
+// PHASE 1: Pattern Matching
+// =============================================================================
+
+#[test]
+fn test_let_destructure_list() {
+    expect_output("pattern_list.later", "6");
+}
+
+#[test]
+fn test_let_destructure_object() {
+    expect_output("pattern_object.later", "30");
+}
+
+#[test]
+fn test_let_destructure_nested() {
+    expect_output("pattern_nested.later", "42");
+}
+
+#[test]
+fn test_let_destructure_spread_list() {
+    expect_output("pattern_spread_list.later", "[2, 3, 4]");
+}
+
+#[test]
+fn test_let_destructure_spread_object() {
+    expect_output("pattern_spread_object.later", "{ b: 2, c: 3 }");
+}
+
+#[test]
+fn test_fn_param_destructure() {
+    expect_output("pattern_fn_param.later", "15");
+}
+
+#[test]
+fn test_pattern_wildcard() {
+    // _ discards a value (important for linear types!)
+    expect_output("pattern_wildcard.later", "kept");
+}
+
+// =============================================================================
+// PHASE 1: Mutability
+// =============================================================================
+
+#[test]
+fn test_mut_variable() {
+    expect_output("mut_basic.later", "10");
+}
+
+#[test]
+fn test_mut_reassign() {
+    expect_output("mut_reassign.later", "20");
+}
+
+#[test]
+fn test_immutable_reassign_error() {
+    expect_error(
+        "immutable_reassign.later",
+        "cannot assign to immutable variable",
+    );
+}
+
+#[test]
+fn test_mut_in_loop() {
+    expect_output("mut_loop.later", "55");
+}
+
+// =============================================================================
+// PHASE 1: Comments and Edge Cases
+// =============================================================================
+
+#[test]
+fn test_empty_file() {
+    // Empty file should produce no output (or unit value)
+    expect_output("empty.later", "");
+}
+
+#[test]
+fn test_comments_ignored() {
+    expect_output("comments.later", "42");
+}
+
+#[test]
+fn test_trailing_comma_list() {
+    expect_output("trailing_comma_list.later", "[1, 2, 3]");
+}
+
+#[test]
+fn test_trailing_comma_object() {
+    expect_output("trailing_comma_object.later", "{ a: 1, b: 2 }");
+}
+
+#[test]
+fn test_trailing_comma_fn_params() {
+    expect_output("trailing_comma_fn.later", "6");
+}
+
+#[test]
+fn test_multiline_expression() {
+    expect_output("multiline.later", "10");
+}
+
+// =============================================================================
+// PHASE 1: Booleans and Comparisons
+// =============================================================================
+
+#[test]
+fn test_boolean_true() {
+    expect_output("bool_true.later", "true");
+}
+
+#[test]
+fn test_boolean_false() {
+    expect_output("bool_false.later", "false");
+}
+
+#[test]
+fn test_boolean_and() {
+    expect_output("bool_and.later", "false");
+}
+
+#[test]
+fn test_boolean_or() {
+    expect_output("bool_or.later", "true");
+}
+
+#[test]
+fn test_boolean_not() {
+    expect_output("bool_not.later", "true");
+}
+
+#[test]
+fn test_comparison_eq() {
+    expect_output("cmp_eq.later", "true");
+}
+
+#[test]
+fn test_comparison_neq() {
+    expect_output("cmp_neq.later", "true");
+}
+
+#[test]
+fn test_comparison_lt() {
+    expect_output("cmp_lt.later", "true");
+}
+
+#[test]
+fn test_comparison_lte() {
+    expect_output("cmp_lte.later", "true");
+}
+
+#[test]
+fn test_comparison_gt() {
+    expect_output("cmp_gt.later", "true");
+}
+
+#[test]
+fn test_comparison_gte() {
+    expect_output("cmp_gte.later", "true");
+}
+
+// =============================================================================
+// PHASE 1: Pipe Operator
+// =============================================================================
+
+#[test]
+fn test_pipe_basic() {
+    expect_output("pipe_basic.later", "5");
+}
+
+#[test]
+fn test_pipe_chain() {
+    expect_output("pipe_chain.later", "30");
+}
+
+// =============================================================================
+// PHASE 2: Linear Types - Advanced
+// =============================================================================
+
+#[test]
+fn test_linear_in_struct() {
+    // Linear values in structs must all be consumed
+    expect_output("linear_struct.later", "done");
+}
+
+#[test]
+fn test_linear_struct_partial_consume_error() {
+    expect_error(
+        "linear_struct_partial.later",
+        "linear value `resources.b` was never consumed",
+    );
+}
+
+#[test]
+fn test_linear_in_list() {
+    // Linear values in lists must all be consumed
+    expect_output("linear_list.later", "done");
+}
+
+#[test]
+fn test_linear_loop_consume() {
+    // Linear value created in loop must be consumed each iteration
+    expect_output("linear_loop.later", "3 resources closed");
+}
+
+#[test]
+fn test_linear_passed_to_fn() {
+    // Passing linear value to function transfers ownership
+    expect_output("linear_fn_transfer.later", "consumed in function");
+}
+
+#[test]
+fn test_linear_returned_from_fn() {
+    // Function can return linear value, caller must consume
+    expect_output("linear_fn_return.later", "done");
+}
+
+#[test]
+fn test_linear_fn_return_not_consumed_error() {
+    expect_error(
+        "linear_fn_return_unused.later",
+        "linear value was never consumed",
+    );
+}
+
+// =============================================================================
+// PHASE 3: Closures
+// =============================================================================
+
+#[test]
+fn test_closure_capture() {
+    expect_output("closure_capture.later", "15");
+}
+
+#[test]
+fn test_closure_capture_mut() {
+    expect_output("closure_capture_mut.later", "3");
+}
+
+#[test]
+fn test_closure_linear_capture_error() {
+    // Can't capture linear value in closure (would allow multiple use)
+    expect_error("closure_linear.later", "cannot capture linear value");
+}
+
+#[test]
+fn test_closure_borrow_capture() {
+    // Can capture borrow in closure
+    expect_output("closure_borrow.later", "42");
+}
+
+// =============================================================================
+// PHASE 4: Recursion
+// =============================================================================
+
+#[test]
+fn test_recursive_factorial() {
+    expect_output("factorial.later", "120");
+}
+
+#[test]
+fn test_recursive_fibonacci() {
+    expect_output("fibonacci.later", "55");
+}
+
+#[test]
+fn test_mutual_recursion() {
+    expect_output("mutual_recursion.later", "true");
+}
+
+// =============================================================================
+// PHASE 5: Effect System - Advanced
+// =============================================================================
+
+#[test]
+fn test_effect_multiple_handlers() {
+    expect_output("effect_multi_handler.later", "a: 1, b: 2");
+}
+
+#[test]
+fn test_effect_nested_handlers() {
+    expect_output("effect_nested_handler.later", "inner handled");
+}
+
+#[test]
+fn test_effect_rethrow() {
+    expect_output("effect_rethrow.later", "outer caught: inner error");
+}
+
+#[test]
+fn test_effect_finally() {
+    // Cleanup runs even when effect propagates
+    expect_output("effect_finally.later", "cleanup ran\nerror: boom");
+}
+
+// =============================================================================
+// PHASE 5: Structured Concurrency - Advanced
+// =============================================================================
+
+#[test]
+fn test_timeout() {
+    expect_output("timeout.later", "timed out");
+}
+
+#[test]
+fn test_nested_spawn() {
+    expect_output("spawn_nested.later", "inner: 1\nouter: 2");
+}
+
+#[test]
+fn test_spawn_with_linear_resource() {
+    // Spawned task can own linear resources
+    expect_output("spawn_linear.later", "resource cleaned up");
+}
+
+#[test]
+fn test_task_cancel_during_cleanup() {
+    // Cancellation during cleanup should complete cleanup
+    expect_output("cancel_during_cleanup.later", "cleanup completed");
+}
+
+// =============================================================================
+// PHASE 8: Memory Size Tracking
+// =============================================================================
+
+#[test]
+fn test_size_annotation() {
+    expect_output("size_annotate.later", "size: 16");
+}
+
+#[test]
+fn test_size_propagates() {
+    // Size of struct is sum of field sizes (plus alignment)
+    expect_output("size_struct.later", "size: 24");
+}
+
+#[test]
+fn test_size_bounded_list() {
+    // List with max size annotation
+    expect_output("size_bounded_list.later", "max size: 100");
+}

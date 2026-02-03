@@ -1,0 +1,11 @@
+// Mutation in a loop
+let mut sum = 0
+let mut i = 1
+loop {
+    if i > 10 {
+        break
+    }
+    sum = sum + i
+    i = i + 1
+}
+sum

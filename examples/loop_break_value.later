@@ -1,0 +1,8 @@
+// Loop that breaks with a value
+let result = loop {
+    let x = compute-something()
+    if x > 40 {
+        break x
+    }
+}
+result

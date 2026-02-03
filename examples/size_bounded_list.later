@@ -1,0 +1,3 @@
+// Bounded list with max size
+let items: List(MaxSize(100)) = []
+"max size: " + items | max-size | to-string

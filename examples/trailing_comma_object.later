@@ -1,0 +1,2 @@
+// Trailing comma in object is allowed
+{ a: 1, b: 2, }
