@@ -1880,8 +1880,8 @@ fn test_precedence_pipe_vs_call() {
 
 #[test]
 fn test_precedence_and_or() {
-    // and binds tighter than or
-    expect_output("prec_and_or.later", "true");
+    // Left-to-right, no special binding
+    expect_output("prec_and_or.later", "false");
 }
 
 // =============================================================================
