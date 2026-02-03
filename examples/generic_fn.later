@@ -1,0 +1,6 @@
+// Generic function instantiation
+fn identity<T>(x: T) -> T {
+    x
+}
+
+identity(42)

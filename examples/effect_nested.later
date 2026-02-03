@@ -1,0 +1,10 @@
+// Inner handler shadows outer handler
+handle {
+    handle {
+        send choice with "which?"
+    } choice _ {
+        continue with "inner"
+    }
+} choice _ {
+    continue with "outer"
+}

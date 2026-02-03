@@ -1479,3 +1479,319 @@ fn test_assert_fail() {
 fn test_debug_print() {
     expect_output("debug.later", "debug: 42\n42");
 }
+
+// =============================================================================
+// Numeric Edge Cases
+// =============================================================================
+
+#[test]
+fn test_integer_overflow() {
+    // Integer overflow should be a runtime error, not silent wraparound
+    expect_error("int_overflow.later", "integer overflow");
+}
+
+#[test]
+fn test_integer_underflow() {
+    expect_error("int_underflow.later", "integer overflow");
+}
+
+#[test]
+fn test_float_nan_comparison() {
+    // NaN comparisons should be false (IEEE 754)
+    expect_output("float_nan_cmp.later", "false");
+}
+
+#[test]
+fn test_float_infinity() {
+    expect_output("float_infinity.later", "inf");
+}
+
+#[test]
+fn test_float_neg_infinity() {
+    expect_output("float_neg_infinity.later", "-inf");
+}
+
+#[test]
+fn test_modulo_zero() {
+    expect_error("mod_zero.later", "division by zero");
+}
+
+// =============================================================================
+// Linear Type Edge Cases (Critical)
+// =============================================================================
+
+#[test]
+fn test_linear_conditional_both_branches_consume() {
+    // Both branches of if must consume a linear value exactly once
+    expect_output("linear_if_consume.later", "done");
+}
+
+#[test]
+fn test_linear_conditional_only_one_branch_error() {
+    // If only one branch consumes, that's an error
+    expect_error(
+        "linear_if_partial.later",
+        "linear value `file` may not be consumed",
+    );
+}
+
+#[test]
+fn test_linear_loop_consume_error() {
+    // Can't consume a linear value inside a loop (might run 0 or N times)
+    expect_error(
+        "linear_loop_consume.later",
+        "cannot consume linear value in loop",
+    );
+}
+
+#[test]
+fn test_linear_return_without_consume() {
+    // Early return must not leak linear values
+    expect_error(
+        "linear_early_return.later",
+        "linear value `file` not consumed before return",
+    );
+}
+
+#[test]
+fn test_linear_break_without_consume() {
+    // Break must not leak linear values from enclosing scope
+    expect_error(
+        "linear_break_leak.later",
+        "linear value `file` not consumed before break",
+    );
+}
+
+#[test]
+fn test_linear_panic_cleanup() {
+    // Panic should still run cleanup for linear values
+    expect_output("linear_panic_cleanup.later", "cleanup ran");
+}
+
+#[test]
+fn test_linear_field_partial_move() {
+    // Can't move a field out of a struct without consuming the whole struct
+    expect_error(
+        "linear_field_move.later",
+        "cannot move field out of linear value",
+    );
+}
+
+#[test]
+fn test_linear_list_element_move() {
+    // Can't move an element out of a linear list
+    expect_error(
+        "linear_list_move.later",
+        "cannot move element out of linear list",
+    );
+}
+
+// =============================================================================
+// Cancellation Edge Cases (Critical)
+// =============================================================================
+
+#[test]
+fn test_cancel_during_cleanup() {
+    // Cancellation during cleanup should be deferred until cleanup completes
+    expect_output("cancel_during_cleanup.later", "cleanup complete");
+}
+
+#[test]
+fn test_double_cancel() {
+    // Cancelling an already-cancelled task is a no-op
+    expect_output("double_cancel.later", "ok");
+}
+
+#[test]
+fn test_cancel_after_complete() {
+    // Cancelling a completed task is a no-op
+    expect_output("cancel_after_complete.later", "result: 42");
+}
+
+#[test]
+fn test_cancel_propagation_hierarchy() {
+    // Parent cancel must cancel all children
+    expect_output("cancel_propagates.later", "child cancelled");
+}
+
+#[test]
+fn test_cancel_cleanup_order() {
+    // Cleanup runs in reverse acquisition order even under cancellation
+    expect_output("cancel_cleanup_order.later", "c\nb\na");
+}
+
+#[test]
+fn test_cancel_check_frequency() {
+    // CPU-bound loops must check cancellation (at loop head)
+    expect_output("cancel_cpu_bound.later", "cancelled after iterations");
+}
+
+// =============================================================================
+// Effect Edge Cases
+// =============================================================================
+
+#[test]
+fn test_effect_handler_scope() {
+    // Effect handler only active within its scope
+    expect_error("effect_handler_scope.later", "unhandled effect: ask");
+}
+
+#[test]
+fn test_effect_shadowing() {
+    // Inner handler shadows outer handler for same effect
+    expect_output("effect_nested.later", "inner");
+}
+
+#[test]
+fn test_effect_resume_multiple_times() {
+    // Generator-style: handler can resume multiple times
+    expect_output("effect_multi_resume.later", "1\n2\n3");
+}
+
+#[test]
+fn test_effect_resume_with_value() {
+    // Handler can provide a value when resuming
+    expect_output("effect_resume_value.later", "got: hello");
+}
+
+#[test]
+fn test_effect_linear_across_boundary() {
+    // Linear values can't escape through effect boundaries
+    expect_error(
+        "effect_linear_escape.later",
+        "linear value cannot escape effect handler",
+    );
+}
+
+// =============================================================================
+// Concurrency Edge Cases
+// =============================================================================
+
+#[test]
+fn test_spawn_return_linear() {
+    // Spawned task can return linear values through proper channels
+    expect_output("spawn_return_linear.later", "resource consumed");
+}
+
+#[test]
+fn test_channel_closed() {
+    // Sending to closed channel is an error
+    expect_error("channel_closed.later", "channel closed");
+}
+
+#[test]
+fn test_channel_receive_cancelled() {
+    // Blocking receive respects cancellation
+    expect_output("channel_receive_cancel.later", "cancelled");
+}
+
+#[test]
+fn test_nursery_error_cancels_siblings() {
+    // One child error cancels all siblings
+    expect_output("nursery_error_cancel.later", "sibling cancelled");
+}
+
+#[test]
+fn test_deadlock_detection() {
+    // Obvious deadlock should be detected
+    expect_error("deadlock.later", "deadlock detected");
+}
+
+// =============================================================================
+// Scope Edge Cases
+// =============================================================================
+
+#[test]
+fn test_use_before_define() {
+    expect_error(
+        "use_before_define.later",
+        "variable `x` used before definition",
+    );
+}
+
+#[test]
+fn test_mutate_immutable() {
+    expect_error(
+        "mutate_immutable.later",
+        "cannot mutate immutable variable `x`",
+    );
+}
+
+#[test]
+fn test_shadow_in_same_scope() {
+    // Shadowing in same scope is allowed (like Rust)
+    expect_output("shadow_same_scope.later", "20");
+}
+
+#[test]
+fn test_closure_outlives_variable() {
+    // Closure can't capture variable that goes out of scope
+    expect_error(
+        "closure_escape.later",
+        "captured variable `x` does not live long enough",
+    );
+}
+
+// =============================================================================
+// Pattern Matching Edge Cases
+// =============================================================================
+
+#[test]
+fn test_pattern_exhaustive_check() {
+    // Non-exhaustive patterns should error
+    expect_error(
+        "pattern_nonexhaustive.later",
+        "non-exhaustive pattern match",
+    );
+}
+
+#[test]
+fn test_pattern_duplicate_binding() {
+    // Same variable bound twice in pattern
+    expect_error(
+        "pattern_duplicate.later",
+        "variable `x` bound multiple times",
+    );
+}
+
+#[test]
+fn test_pattern_or() {
+    // Or patterns
+    expect_output("pattern_or.later", "matched");
+}
+
+#[test]
+fn test_pattern_guard() {
+    // Pattern with guard clause
+    expect_output("pattern_guard.later", "positive");
+}
+
+// =============================================================================
+// Type System Edge Cases
+// =============================================================================
+
+#[test]
+fn test_type_recursive() {
+    // Recursive type definition
+    expect_output("type_recursive.later", "node: 1");
+}
+
+#[test]
+fn test_type_infinite_recursion() {
+    // Infinite type should be an error
+    expect_error("type_infinite.later", "infinite type");
+}
+
+#[test]
+fn test_generic_instantiation() {
+    // Generic function instantiation
+    expect_output("generic_fn.later", "42");
+}
+
+#[test]
+fn test_generic_constraint_violation() {
+    expect_error(
+        "generic_constraint.later",
+        "type does not satisfy constraint",
+    );
+}

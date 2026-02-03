@@ -1,0 +1,10 @@
+// Error: early return leaks a linear value
+fn process() {
+    let file = open("test.txt")
+    if true {
+        return "early"  // file is not consumed!
+    }
+    file | close
+    "done"
+}
+process()

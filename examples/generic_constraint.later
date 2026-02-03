@@ -1,0 +1,8 @@
+// Error: type doesn't satisfy constraint
+fn show<T: Display>(x: T) {
+    print(x)
+}
+
+type Secret = { value: Int }  // No Display implementation
+
+show({ value: 42 })  // Error: Secret doesn't implement Display

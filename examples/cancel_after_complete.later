@@ -1,0 +1,8 @@
+// Cancel after complete is a no-op
+spawn {
+    42
+} as task
+
+let result = task | await
+task | cancel  // No-op, already complete
+print("result: {result}")

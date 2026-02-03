@@ -1,0 +1,14 @@
+// One child error cancels all siblings
+nursery {
+    spawn {
+        defer { print("sibling cancelled") }
+        sleep(1000)
+    }
+    
+    spawn {
+        sleep(10)
+        panic("error!")
+    }
+} | handle {
+    panic _ { "caught" }
+}

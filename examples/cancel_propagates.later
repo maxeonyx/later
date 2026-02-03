@@ -1,0 +1,12 @@
+// Parent cancel propagates to all children
+spawn {
+    spawn {
+        defer { print("child cancelled") }
+        sleep(1000)
+    } as child
+    child | await
+} as parent
+
+sleep(1)
+parent | cancel
+parent | await

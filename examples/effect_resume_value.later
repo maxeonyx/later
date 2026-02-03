@@ -1,0 +1,8 @@
+// Handler provides value when resuming
+let result = handle {
+    let response = send ask with "question"
+    "got: {response}"
+} ask _ {
+    continue with "hello"
+}
+print(result)

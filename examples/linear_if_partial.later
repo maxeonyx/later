@@ -1,0 +1,7 @@
+// Error: only one branch consumes the linear value
+let file = open("test.txt")
+if true {
+    file | close
+}
+// else branch doesn't consume file - this is an error
+"done"

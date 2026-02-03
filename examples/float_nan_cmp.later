@@ -1,0 +1,3 @@
+// NaN != NaN (IEEE 754)
+let nan = 0.0 / 0.0
+nan == nan

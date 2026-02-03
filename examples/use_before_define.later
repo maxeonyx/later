@@ -1,0 +1,3 @@
+// Error: use before definition
+print(x)
+let x = 42

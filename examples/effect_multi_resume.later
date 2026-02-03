@@ -1,0 +1,9 @@
+// Handler can resume multiple times (generator)
+handle {
+    send yield with 1
+    send yield with 2
+    send yield with 3
+} yield v {
+    print(v)
+    continue
+}

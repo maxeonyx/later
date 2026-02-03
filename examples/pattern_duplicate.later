@@ -1,0 +1,2 @@
+// Error: same variable bound multiple times
+let [x, x] = [1, 2]  // Error: x bound twice

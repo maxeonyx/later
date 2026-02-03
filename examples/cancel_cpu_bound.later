@@ -1,0 +1,17 @@
+// CPU-bound loops check cancellation at loop head
+spawn {
+    let mut i = 0
+    loop {
+        // Cancellation check happens here
+        i = i + 1
+        if i > 1000000 {
+            break
+        }
+    }
+    print("completed")
+} as task
+
+sleep(1)
+task | cancel
+task | await
+print("cancelled after iterations")

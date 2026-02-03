@@ -1,0 +1,13 @@
+// Panic should still run cleanup for linear values
+fn may_panic() {
+    let file = open("test.txt")
+    defer { 
+        file | close
+        print("cleanup ran")
+    }
+    panic("oops")
+}
+
+may_panic() | handle {
+    panic _ { "caught" }
+}

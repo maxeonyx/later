@@ -1,0 +1,2 @@
+// Division by zero produces infinity for floats
+1.0 / 0.0

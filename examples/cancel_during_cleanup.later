@@ -1,19 +1,15 @@
-// Cancellation during cleanup should complete cleanup
-let mut result = ""
-
+// Cancellation during cleanup is deferred
 spawn {
-    let resource = open("data.txt")
+    let file = open("test.txt")
     defer {
-        // Even if cancellation happens during this cleanup,
-        // it must complete
-        sleep(10)  // Simulate slow cleanup
-        resource | close
-        result = "cleanup completed"
+        // Even if cancelled here, cleanup must complete
+        sleep(10)
+        file | close
+        print("cleanup complete")
     }
-    long-running-operation()
+    sleep(1000)
 } as task
 
+sleep(1)
 task | cancel
-task | await-cancelled
-
-result
+task | await

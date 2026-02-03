@@ -1,0 +1,5 @@
+// Error: break leaks a linear value
+loop {
+    let file = open("test.txt")
+    break  // file is not consumed!
+}

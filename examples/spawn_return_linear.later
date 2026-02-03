@@ -1,0 +1,11 @@
+// Spawned task returns linear value through channel
+let (tx, rx) = channel()
+
+spawn {
+    let file = open("test.txt")
+    tx | send(file)  // Transfer ownership through channel
+}
+
+let file = rx | receive
+file | close
+print("resource consumed")

@@ -31,7 +31,7 @@ This is a test-first development project. Your job is to:
 
 ## Current Status
 
-**218 failing E2E tests** - Comprehensive specification complete.
+**260 failing E2E tests** - Comprehensive specification complete.
 
 The test suite covers the entire language as described in VISION.md:
 - Basic syntax (expressions, bindings, functions, objects, lists)
@@ -42,6 +42,7 @@ The test suite covers the entire language as described in VISION.md:
 - Structured concurrency (spawn, nursery, channels)
 - Multistage (@comptime, @startup)
 - Memory tracking
+- Edge cases (overflow, NaN, deadlock, scope escape)
 - Import/export
 - Real-world patterns
 

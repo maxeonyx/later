@@ -1,0 +1,5 @@
+// Error: can't move an element out of a linear list
+let files = [open("a.txt"), open("b.txt")]
+let f = files[0]  // This would move the element
+f | close
+// What about files[1]? This is undefined.

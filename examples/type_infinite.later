@@ -1,0 +1,6 @@
+// Error: infinite type (not through indirection)
+// This creates a type equation like: T = (T, Int)
+fn infinite(x) {
+    (infinite(x), x)
+}
+infinite(1)

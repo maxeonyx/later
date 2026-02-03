@@ -1,0 +1,11 @@
+// Cleanup runs in reverse order even under cancellation
+spawn {
+    defer { print("a") }
+    defer { print("b") }
+    defer { print("c") }
+    sleep(1000)
+} as task
+
+sleep(1)
+task | cancel
+task | await

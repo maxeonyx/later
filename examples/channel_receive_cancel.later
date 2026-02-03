@@ -1,0 +1,12 @@
+// Blocking receive respects cancellation
+spawn {
+    let (tx, rx) = channel()
+    // Never send anything
+    rx | receive  // Blocks forever
+} as task
+
+sleep(1)
+task | cancel
+task | await | handle {
+    cancel _ { print("cancelled") }
+}

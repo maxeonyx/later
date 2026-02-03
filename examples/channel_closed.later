@@ -1,0 +1,4 @@
+// Sending to closed channel is an error
+let (tx, rx) = channel()
+rx | close
+tx | send("hello")  // Error: channel closed

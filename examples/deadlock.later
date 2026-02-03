@@ -1,0 +1,15 @@
+// Deadlock: two tasks waiting on each other
+let (tx1, rx1) = channel()
+let (tx2, rx2) = channel()
+
+spawn {
+    rx1 | receive
+    tx2 | send("b")
+} as task1
+
+spawn {
+    rx2 | receive
+    tx1 | send("a")
+} as task2
+
+[task1, task2] | all | await

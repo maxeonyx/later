@@ -1,0 +1,4 @@
+// Shadowing in same scope is allowed
+let x = 10
+let x = 20
+x

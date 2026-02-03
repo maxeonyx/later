@@ -1,0 +1,12 @@
+// Handler is only active within its scope
+fn inner() {
+    send ask with "question"  // Error: no handler
+}
+
+handle {
+    // handler scope ends here
+} ask q {
+    continue with "answer"
+}
+
+inner()  // ask effect not handled

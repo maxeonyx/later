@@ -1,0 +1,7 @@
+// Or patterns
+let x = 2
+
+match x {
+    1 or 2 or 3 { "matched" }
+    _ { "other" }
+}

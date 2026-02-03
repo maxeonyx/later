@@ -1,0 +1,3 @@
+// Integer overflow - should be a runtime error
+let max = 9223372036854775807  // i64 max
+max + 1

@@ -1,0 +1,8 @@
+// Pattern with guard clause
+let x = 5
+
+match x {
+    n if n > 0 { "positive" }
+    n if n < 0 { "negative" }
+    _ { "zero" }
+}
