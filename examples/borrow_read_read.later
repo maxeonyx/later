@@ -1,0 +1,7 @@
+// Multiple read borrows are allowed
+let x = 42
+let ref1 = &x
+let ref2 = &x
+print(ref1)
+print(ref2)
+print("both accessed")

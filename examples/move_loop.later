@@ -1,0 +1,6 @@
+// Move in loop is an error
+let file = open("test.txt")
+loop {
+    file | close  // Error: would move on each iteration
+    break
+}

@@ -1,0 +1,3 @@
+// Error should suggest fix
+let x = 42
+prnt(x)  // Did you mean: print?

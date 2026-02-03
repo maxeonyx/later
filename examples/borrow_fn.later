@@ -1,0 +1,8 @@
+// Function can borrow and return (borrow from input)
+fn first(list) {
+    &list[0]
+}
+
+let nums = [42, 43, 44]
+let ref = first(nums)
+print(ref)

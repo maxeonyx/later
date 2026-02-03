@@ -1,0 +1,2 @@
+// Error should show code context
+let x = ???

@@ -1,0 +1,3 @@
+// Multiple errors in one file
+let x = ???
+let y = ???

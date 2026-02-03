@@ -2123,3 +2123,151 @@ fn test_recursive_data_structure() {
     // Deeply nested data structure
     expect_output("recursive_data.later", "depth: 100");
 }
+
+// =============================================================================
+// Error Message Quality
+// =============================================================================
+
+#[test]
+fn test_error_column_number() {
+    // Error messages should include column number
+    expect_error("error_column.later", "column 10");
+}
+
+#[test]
+fn test_error_context_snippet() {
+    // Error messages should show the offending code
+    expect_error("error_context.later", "let x = ???");
+}
+
+#[test]
+fn test_error_suggestion() {
+    // Error messages should suggest fixes when possible
+    expect_error("error_suggestion.later", "did you mean");
+}
+
+#[test]
+fn test_error_multiple() {
+    // Multiple errors should all be reported
+    expect_error("error_multi.later", "2 errors");
+}
+
+#[test]
+fn test_error_recovery() {
+    // Parser should recover and find more errors
+    expect_error("error_recovery.later", "error 1");
+}
+
+// =============================================================================
+// Borrowing Rules
+// =============================================================================
+
+#[test]
+fn test_borrow_read_read() {
+    // Multiple read borrows are allowed
+    expect_output("borrow_read_read.later", "both accessed");
+}
+
+#[test]
+fn test_borrow_read_write_error() {
+    // Can't write while borrowed for reading
+    expect_error("borrow_read_write.later", "cannot mutate while borrowed");
+}
+
+#[test]
+fn test_borrow_write_read_error() {
+    // Can't read while borrowed for writing
+    expect_error(
+        "borrow_write_read.later",
+        "cannot access while mutably borrowed",
+    );
+}
+
+#[test]
+fn test_borrow_write_write_error() {
+    // Can't have two mutable borrows
+    expect_error("borrow_write_write.later", "cannot borrow mutably twice");
+}
+
+#[test]
+fn test_borrow_outlives_error() {
+    // Borrow cannot outlive the borrowed value
+    expect_error("borrow_outlives.later", "borrow outlives borrowed value");
+}
+
+#[test]
+fn test_borrow_through_function() {
+    // Function can borrow and return
+    expect_output("borrow_fn.later", "42");
+}
+
+// =============================================================================
+// Move Semantics
+// =============================================================================
+
+#[test]
+fn test_move_after_move() {
+    // Can't use a value after moving it
+    expect_error("move_double.later", "value already moved");
+}
+
+#[test]
+fn test_move_after_borrow() {
+    // Can't move while borrowed
+    expect_error("move_borrowed.later", "cannot move borrowed value");
+}
+
+#[test]
+fn test_move_in_condition() {
+    // Move in condition body creates uncertainty
+    expect_error("move_condition.later", "value may have been moved");
+}
+
+#[test]
+fn test_move_in_loop_error() {
+    // Move in loop is an error (unless rebinding)
+    expect_error("move_loop.later", "cannot move in loop");
+}
+
+#[test]
+fn test_move_rebind_ok() {
+    // Moving then rebinding is OK
+    expect_output("move_rebind.later", "42");
+}
+
+// =============================================================================
+// Miscellaneous Edge Cases
+// =============================================================================
+
+#[test]
+fn test_zero_divide_float() {
+    // Float division by zero produces infinity, not error
+    expect_output("float_div_zero.later", "inf");
+}
+
+#[test]
+fn test_negative_array_size() {
+    // Negative array size is an error
+    expect_error("neg_array_size.later", "array size cannot be negative");
+}
+
+#[test]
+fn test_empty_match() {
+    // Match with no arms is an error
+    expect_error("empty_match.later", "match requires at least one arm");
+}
+
+#[test]
+fn test_cyclic_import() {
+    // Cyclic imports are detected
+    expect_error("cyclic_import.later", "cyclic import detected");
+}
+
+#[test]
+fn test_self_reference() {
+    // Self-referential value
+    expect_error(
+        "self_ref.later",
+        "cannot reference value during its own initialization",
+    );
+}

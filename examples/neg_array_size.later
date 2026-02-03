@@ -1,0 +1,3 @@
+// Negative array size is an error
+let size = -5
+let arr = Array(size)

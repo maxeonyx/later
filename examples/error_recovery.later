@@ -1,0 +1,8 @@
+// Parser should recover and report multiple errors
+let x = {
+  // error 1: missing value
+}
+
+let y = [
+  // error 2: missing value  
+]

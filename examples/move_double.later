@@ -1,0 +1,4 @@
+// Can't use value after moving
+let file = open("test.txt")
+let file2 = file  // move
+file | close  // Error: file already moved
