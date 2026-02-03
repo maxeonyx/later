@@ -1,0 +1,13 @@
+// Comptime evaluation: computed at build time
+
+fn factorial(n) {
+    if n <= 1 {
+        1
+    } else {
+        n * factorial(n - 1)
+    }
+}
+
+// The @comptime annotation means this is evaluated at build time
+// The resulting program just contains the literal 120
+@comptime factorial(5)

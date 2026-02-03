@@ -1,0 +1,3 @@
+// Kebab-case identifier
+let my-value = 42
+my-value

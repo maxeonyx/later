@@ -1,0 +1,7 @@
+// Spawn and await a task
+
+let task = spawn {
+    40 + 2
+}
+
+task | await

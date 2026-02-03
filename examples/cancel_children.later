@@ -1,0 +1,19 @@
+// Cancellation propagates to child tasks
+
+let log = mut []
+
+spawn {
+    spawn {
+        defer { log = [...log, "child cancelled"] }
+        long-running-operation()
+    } as child
+    
+    defer { log = [...log, "parent cancelled"] }
+    
+    child | await
+} as parent
+
+parent | cancel
+parent | await
+
+log | join("\n")

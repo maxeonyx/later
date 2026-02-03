@@ -1,0 +1,11 @@
+// Simple effect: send and handle
+
+let my-effect = symbol()
+
+let result = handle {
+    send my-effect with 42
+} my-effect value {
+    "handled: " + value | to-string
+}
+
+result

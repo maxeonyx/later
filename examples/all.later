@@ -1,0 +1,9 @@
+// All combinator: wait for all tasks
+
+let tasks = [
+    spawn { 1 },
+    spawn { 2 },
+    spawn { 3 },
+]
+
+tasks | all | await

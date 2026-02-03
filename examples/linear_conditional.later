@@ -1,0 +1,8 @@
+// ERROR: Linear value conditionally consumed
+// Both branches must consume the linear value
+
+let file = open("data.txt")
+if some-condition() {
+    file | close
+}
+// Error: file may not be consumed in the else branch

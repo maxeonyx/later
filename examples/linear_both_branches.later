@@ -1,0 +1,9 @@
+// OK: Linear value consumed in both branches
+
+let file = open("data.txt")
+if some-condition() {
+    file | close
+} else {
+    file | close
+}
+"done"

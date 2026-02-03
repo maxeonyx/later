@@ -1,0 +1,9 @@
+// Borrow then consume: owner can consume after borrow ends
+
+let resource = create-resource()
+{
+    let borrowed = &resource
+    borrowed | inspect
+}  // borrow ends here
+resource | close  // owner can now consume
+"done"

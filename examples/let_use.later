@@ -1,0 +1,3 @@
+// Let binding used in expression
+let x = 5
+x + 5

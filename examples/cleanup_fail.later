@@ -1,0 +1,9 @@
+// Cleanup can fail
+
+let resource = open-resource()
+
+handle {
+    resource | close
+} io-error e {
+    "cleanup failed: " + e + "\nresource abandoned"
+}

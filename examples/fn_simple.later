@@ -1,0 +1,5 @@
+// Simple function definition and call
+fn add-two(x) {
+    x + 2
+}
+add-two(3)

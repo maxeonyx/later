@@ -1,0 +1,15 @@
+// Startup stage: read config and specialize
+
+// At build time, this produces a residual program that reads config
+// At startup time, config is read and program is further specialized
+
+@startup
+let config = read-config("app.toml")
+
+// This branch is resolved at startup, not runtime
+// Only the matching branch exists in the final runtime program
+if config.environment == "production" {
+    "configured: production"
+} else {
+    "configured: development"
+}

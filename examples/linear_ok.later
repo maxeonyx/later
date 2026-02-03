@@ -1,0 +1,5 @@
+// OK: Linear value properly consumed
+
+let file = open("data.txt")
+file | close
+"done"

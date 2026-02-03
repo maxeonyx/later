@@ -1,0 +1,17 @@
+// Race combinator: first to complete wins, others cancelled
+
+let tasks = [
+    spawn { 
+        sleep(100)
+        "slow"
+    },
+    spawn { 
+        "first"
+    },
+    spawn { 
+        sleep(200)
+        "slower"
+    },
+]
+
+tasks | race | await

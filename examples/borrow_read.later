@@ -1,0 +1,7 @@
+// Borrowing: read access without consuming
+
+let x = { value: 42 }
+let v = &x.value  // borrow
+v  // prints 42
+// x is still valid here (not consumed)
+x | drop

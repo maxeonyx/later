@@ -1,0 +1,3 @@
+// Parentheses override running precedence
+// 1 + (2 * 3) = 1 + 6 = 7
+1 + (2 * 3)

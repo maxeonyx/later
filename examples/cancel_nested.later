@@ -1,0 +1,23 @@
+// Nested cleanup runs in reverse order
+
+let log = mut []
+
+spawn {
+    let outer = acquire("outer") with {
+        log = [...log, "outer cleanup"]
+    }
+    
+    let inner = acquire("inner") with {
+        log = [...log, "inner cleanup"]
+    }
+    
+    long-running-operation()
+    
+    inner | close
+    outer | close
+} as task
+
+task | cancel
+task | await
+
+log | join("\n")

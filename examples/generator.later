@@ -1,0 +1,15 @@
+// Generator using yield effect
+
+fn range(n) {
+    let mut i = 0
+    loop {
+        if i >= n {
+            break
+        }
+        send yield with i
+        i = i + 1
+    }
+}
+
+// Collect generator into a list
+range(5) | collect

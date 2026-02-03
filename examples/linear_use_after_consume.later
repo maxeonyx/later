@@ -1,0 +1,6 @@
+// ERROR: Use after consume
+// Once a linear value is consumed, it cannot be used again
+
+let file = open("data.txt")
+file | close
+file | read  // Error: already consumed

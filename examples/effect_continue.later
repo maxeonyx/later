@@ -1,0 +1,12 @@
+// Effect with continue: resume execution with a value
+
+let ask = symbol()
+
+let result = handle {
+    let answer = send ask
+    "resumed: " + answer | to-string
+} ask _ {
+    continue with 100
+}
+
+result

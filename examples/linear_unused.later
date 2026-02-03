@@ -1,0 +1,5 @@
+// ERROR: Linear value never consumed
+// The `open` function returns a linear File type that must be consumed
+
+let file = open("data.txt")
+// No close! This should be a compile error.

@@ -1,0 +1,20 @@
+// Cancellation: cleanup runs when cancelled
+
+let cleanup-ran = mut false
+
+spawn {
+    let resource = acquire-resource()
+    // This will be cancelled before completing
+    long-running-operation()
+    resource | close
+} as task
+
+// Cancel the task
+task | cancel
+
+// The runtime should have run cleanup despite cancellation
+if cleanup-ran {
+    "cleanup ran"
+} else {
+    "cleanup did NOT run"
+}

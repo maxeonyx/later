@@ -1,0 +1,6 @@
+// ERROR: Unhandled effect propagates and becomes an error
+
+let my-effect = symbol()
+
+send my-effect with "payload"
+// No handler! This should error.

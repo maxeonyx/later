@@ -1,0 +1,6 @@
+// ERROR: Cannot consume while borrowed
+
+let resource = create-resource()
+let borrowed = &resource
+resource | close  // Error: cannot consume while borrowed
+borrowed | inspect

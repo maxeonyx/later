@@ -1,0 +1,31 @@
+// Cleanup with retry
+
+let log = mut []
+let attempts = mut 0
+
+fn flaky-close(resource) {
+    attempts = attempts + 1
+    log = [...log, "retry " + attempts | to-string]
+    if attempts < 3 {
+        send io-error with "transient failure"
+    }
+    log = [...log, "cleanup succeeded"]
+}
+
+let resource = open-resource()
+
+handle {
+    loop {
+        handle {
+            resource | flaky-close
+            break
+        } io-error _ {
+            if attempts >= 3 {
+                break
+            }
+            continue
+        }
+    }
+}
+
+log | join("\n")

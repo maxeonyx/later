@@ -1,0 +1,27 @@
+// All with failure: one fails, others cancelled and cleaned up
+
+let log = mut []
+
+let tasks = [
+    spawn {
+        defer { log = [...log, "cleanup: task 1"] }
+        sleep(100)
+        "ok"
+    },
+    spawn {
+        send error with "task 2 failed"
+    },
+    spawn {
+        defer { log = [...log, "cleanup: task 3"] }
+        sleep(100)
+        "ok"
+    },
+]
+
+handle {
+    tasks | all | await
+} error e {
+    log = ["error: " + e, ...log]
+}
+
+log | join("\n")
