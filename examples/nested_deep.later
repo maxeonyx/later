@@ -1,11 +1,10 @@
-// Deeply nested structure access
-let data = {
-    level1: {
-        level2: {
-            level3: {
-                value: 42
-            }
-        }
+// 100 nested blocks - should not overflow parser/interpreter stack
+fn nest(n) {
+    if n == 0 {
+        n
+    } else {
+        { nest(n - 1) + 1 }
     }
 }
-data.level1.level2.level3.value
+
+nest(100)

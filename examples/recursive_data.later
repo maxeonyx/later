@@ -1,0 +1,22 @@
+// Deeply nested data structure
+fn make-tree(depth) {
+    if depth == 0 {
+        { value: 0, children: [] }
+    } else {
+        {
+            value: depth,
+            children: [make-tree(depth - 1)]
+        }
+    }
+}
+
+fn count-depth(tree) {
+    if tree.children | len == 0 {
+        1
+    } else {
+        1 + count-depth(tree.children[0])
+    }
+}
+
+let tree = make-tree(99)
+print("depth: {count-depth(tree)}")

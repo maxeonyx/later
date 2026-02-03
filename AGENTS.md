@@ -31,7 +31,7 @@ This is a test-first development project. Your job is to:
 
 ## Current Status
 
-**287 failing E2E tests** - Comprehensive specification complete.
+**305 failing E2E tests** - Comprehensive specification complete.
 
 The test suite covers the entire language as described in VISION.md:
 - Basic syntax (expressions, bindings, functions, objects, lists)

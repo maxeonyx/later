@@ -1,0 +1,14 @@
+// Two tasks cannot both hold the same linear resource
+let file = open("test.txt")
+
+spawn {
+    // task1 has file
+    file | close
+} as task1
+
+spawn {
+    // task2 also tries to use file - error!
+    file | close
+} as task2
+
+[task1, task2] | all | await

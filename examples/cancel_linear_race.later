@@ -1,0 +1,28 @@
+// Race between cancel and linear value transfer
+let (tx, rx) = channel()
+
+spawn {
+    let file = open("test.txt")
+    defer { 
+        // If cancelled before send, cleanup here
+        if not file.transferred {
+            file | close
+        }
+    }
+    tx | send(file)
+} as sender
+
+spawn {
+    let file = rx | receive
+    file | close
+} as receiver | handle {
+    cancel _ {
+        // Receiver cancelled - sender handles cleanup
+    }
+}
+
+sleep(1)
+receiver | cancel
+
+// Either sender or receiver cleaned up the file
+print("resource properly handled")

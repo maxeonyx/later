@@ -1,0 +1,8 @@
+// Unhandled effect in defer is an error
+{
+    defer {
+        send unhandled-effect with "data"
+    }
+    "work"
+}
+// No handler for unhandled-effect

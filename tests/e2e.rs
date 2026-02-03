@@ -1978,3 +1978,148 @@ fn test_block_trailing_semicolon() {
     // Trailing semicolon means nil
     expect_output("block_trailing_semi.later", "nil");
 }
+
+// =============================================================================
+// Integration: Linear Types + Concurrency
+// =============================================================================
+
+#[test]
+fn test_linear_concurrent_access() {
+    // Two tasks cannot both hold the same linear resource
+    expect_error(
+        "linear_concurrent.later",
+        "linear value moved to another task",
+    );
+}
+
+#[test]
+fn test_linear_channel_transfer() {
+    // Linear values can be safely transferred via channels
+    expect_output("linear_channel.later", "file closed in receiver");
+}
+
+#[test]
+fn test_linear_nursery_scope() {
+    // Linear values can't escape nursery scope
+    expect_error(
+        "linear_nursery_escape.later",
+        "linear value cannot escape nursery",
+    );
+}
+
+// =============================================================================
+// Integration: Effects + Linear Types
+// =============================================================================
+
+#[test]
+fn test_effect_linear_cleanup_on_resume() {
+    // Handler that resumes: linear values stay valid
+    expect_output("effect_linear_resume.later", "file closed");
+}
+
+#[test]
+fn test_effect_linear_cleanup_on_abort() {
+    // Handler that aborts: linear values must be cleaned up
+    expect_output("effect_linear_abort.later", "cleanup ran\naborted");
+}
+
+// =============================================================================
+// Integration: Cancellation + Linear Types
+// =============================================================================
+
+#[test]
+fn test_cancel_linear_transfer_race() {
+    // Race between cancel and linear value transfer
+    expect_output("cancel_linear_race.later", "resource properly handled");
+}
+
+// =============================================================================
+// Integration: Defer + Effects
+// =============================================================================
+
+#[test]
+fn test_defer_can_send_effect() {
+    // Defer block can send effects
+    expect_output("defer_effect.later", "cleanup effect handled");
+}
+
+#[test]
+fn test_defer_effect_unhandled() {
+    // Unhandled effect in defer is an error
+    expect_error("defer_effect_unhandled.later", "unhandled effect in defer");
+}
+
+// =============================================================================
+// Integration: Multistage + Linear Types
+// =============================================================================
+
+#[test]
+fn test_comptime_linear_error() {
+    // Can't have linear types at compile time (no cleanup at compile time)
+    expect_error(
+        "comptime_linear.later",
+        "linear types not allowed at compile time",
+    );
+}
+
+#[test]
+fn test_startup_linear_ok() {
+    // Startup can use linear types (has runtime cleanup)
+    expect_output("startup_linear.later", "startup resource cleaned");
+}
+
+// =============================================================================
+// Error Recovery Patterns
+// =============================================================================
+
+#[test]
+fn test_error_with_cleanup() {
+    // Error propagates but cleanup still runs
+    expect_output("error_cleanup.later", "cleanup ran\nerror: oops");
+}
+
+#[test]
+fn test_error_in_cleanup() {
+    // Error during cleanup - first error wins, cleanup error logged
+    expect_output("error_in_cleanup.later", "original error");
+}
+
+#[test]
+fn test_multiple_errors_cleanup() {
+    // Multiple cleanup errors - all are logged
+    expect_output("multi_error_cleanup.later", "all cleanup errors logged");
+}
+
+// =============================================================================
+// Stress Tests (for implementation robustness)
+// =============================================================================
+
+#[test]
+fn test_deeply_nested_blocks() {
+    // 100 nested blocks
+    expect_output("nested_deep.later", "100");
+}
+
+#[test]
+fn test_many_defers() {
+    // 100 defers in sequence
+    expect_output("many_defers.later", "100 cleanups ran");
+}
+
+#[test]
+fn test_many_spawns() {
+    // Spawn 100 concurrent tasks
+    expect_output("many_spawns.later", "100 tasks completed");
+}
+
+#[test]
+fn test_long_pipe_chain() {
+    // Long pipe chain
+    expect_output("long_pipe.later", "42");
+}
+
+#[test]
+fn test_recursive_data_structure() {
+    // Deeply nested data structure
+    expect_output("recursive_data.later", "depth: 100");
+}

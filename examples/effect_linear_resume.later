@@ -1,0 +1,11 @@
+// Handler resumes: linear values stay valid
+let file = open("test.txt")
+
+handle {
+    send log with "message"
+    file | close
+    print("file closed")
+} log msg {
+    print("log: {msg}")
+    continue
+}

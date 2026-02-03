@@ -1,0 +1,14 @@
+// Multiple cleanup errors - all are logged
+fn work() {
+    defer { panic("cleanup 1") }
+    defer { panic("cleanup 2") }
+    defer { panic("cleanup 3") }
+    panic("original")
+}
+
+work() | handle {
+    panic msg { 
+        // All cleanup errors were logged
+        print("all cleanup errors logged")
+    }
+}

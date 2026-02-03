@@ -1,0 +1,12 @@
+// Defer block can send effects
+handle {
+    {
+        defer {
+            send cleanup with "resource"
+        }
+        "work done"
+    }
+} cleanup name {
+    print("cleanup effect handled")
+    continue
+}

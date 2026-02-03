@@ -1,0 +1,15 @@
+// Linear values can be safely transferred via channels
+let (tx, rx) = channel()
+
+spawn {
+    let file = open("test.txt")
+    tx | send(file)
+}
+
+spawn {
+    let file = rx | receive
+    file | close
+    print("file closed in receiver")
+} as receiver
+
+receiver | await

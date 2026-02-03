@@ -1,0 +1,11 @@
+// Error during cleanup - first error wins
+fn work() {
+    defer { 
+        panic("cleanup error")  // This is logged but doesn't replace original
+    }
+    panic("original error")
+}
+
+work() | handle {
+    panic msg { print(msg) }
+}

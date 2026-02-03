@@ -4,7 +4,7 @@ Immediate tasks for the current/next agent.
 
 ## Current State
 
-**287 failing E2E tests** - Comprehensive specification complete.
+**305 failing E2E tests** - Comprehensive specification complete.
 
 The test suite now captures the full language vision as described in VISION.md. All tests fail with "later: not yet implemented" which is the correct baseline failure.
 

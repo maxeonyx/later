@@ -1,0 +1,10 @@
+// Long pipe chain - tests pipe parsing
+fn add(n) fn(x) x + n
+fn mul(n) fn(x) x * n
+
+// Build 42 through a chain
+1 | add(1) | mul(2) | add(1) | mul(2) | add(1) | mul(2) | add(1) | mul(2) | add(1) | add(1)
+// = ((((((((1+1)*2+1)*2+1)*2+1)*2+1)+1 = ...
+// Let's trace: 1+1=2, *2=4, +1=5, *2=10, +1=11, *2=22, +1=23, *2=46, +1=47, +1=48... not 42
+// Simpler: 2 | mul(3) | mul(7) = 42
+2 | mul(3) | mul(7)

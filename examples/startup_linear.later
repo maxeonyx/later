@@ -1,0 +1,9 @@
+// Startup can use linear types
+@startup {
+    let file = open("config.txt")
+    defer { 
+        file | close
+        print("startup resource cleaned")
+    }
+    file | read
+}

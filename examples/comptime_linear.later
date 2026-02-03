@@ -1,0 +1,5 @@
+// Can't have linear types at compile time
+@comptime {
+    let file = open("test.txt")  // Error: no cleanup at compile time
+    file | close
+}

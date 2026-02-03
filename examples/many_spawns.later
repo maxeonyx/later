@@ -1,0 +1,18 @@
+// Spawn 100 concurrent tasks
+let mut completed = 0
+let lock = mutex()
+
+nursery {
+    let mut i = 0
+    loop {
+        if i >= 100 { break }
+        spawn {
+            lock | acquire
+            completed = completed + 1
+            lock | release
+        }
+        i = i + 1
+    }
+}
+
+print("{completed} tasks completed")
