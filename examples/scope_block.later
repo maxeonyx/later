@@ -1,0 +1,6 @@
+// Block scope - inner binding doesn't affect outer
+let x = "outer"
+{
+    let x = "inner"
+}
+x

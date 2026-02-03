@@ -1,0 +1,6 @@
+// While loop (sugar for loop + if + break)
+let mut i = 0
+while i < 5 {
+    i = i + 1
+}
+i

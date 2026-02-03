@@ -1,0 +1,9 @@
+// Currying
+fn curry-add(a) {
+    fn(b) {
+        fn(c) {
+            a + b + c
+        }
+    }
+}
+curry-add(3)(4)(5)

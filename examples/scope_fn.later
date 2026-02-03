@@ -1,0 +1,7 @@
+// Function scope
+let x = 10
+fn get-x() {
+    x  // Captures outer x
+}
+let x = 20  // Shadow x
+get-x()  // Returns 10 (lexical scoping)

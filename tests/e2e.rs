@@ -1303,3 +1303,179 @@ fn test_timeout_with_cleanup() {
 fn test_parallel_map() {
     expect_output("parallel_map.later", "[2, 4, 6, 8, 10]");
 }
+
+// =============================================================================
+// Floats and Numbers
+// =============================================================================
+
+#[test]
+fn test_float_literal() {
+    expect_output("float.later", "3.14");
+}
+
+#[test]
+fn test_float_arithmetic() {
+    expect_output("float_arith.later", "7.5");
+}
+
+#[test]
+fn test_int_to_float() {
+    expect_output("int_to_float.later", "5.0");
+}
+
+#[test]
+fn test_float_comparison() {
+    expect_output("float_cmp.later", "true");
+}
+
+// =============================================================================
+// Unary Operators
+// =============================================================================
+
+#[test]
+fn test_unary_minus() {
+    expect_output("unary_minus.later", "-5");
+}
+
+#[test]
+fn test_unary_not() {
+    expect_output("unary_not.later", "false");
+}
+
+// =============================================================================
+// Index Bounds
+// =============================================================================
+
+#[test]
+fn test_list_out_of_bounds() {
+    expect_error("list_oob.later", "index 10 out of bounds");
+}
+
+#[test]
+fn test_string_out_of_bounds() {
+    expect_error("string_oob.later", "index 10 out of bounds");
+}
+
+// =============================================================================
+// Object Operations
+// =============================================================================
+
+#[test]
+fn test_object_has_key() {
+    expect_output("object_has_key.later", "true");
+}
+
+#[test]
+fn test_object_keys() {
+    expect_output("object_keys.later", "[\"a\", \"b\", \"c\"]");
+}
+
+#[test]
+fn test_object_values() {
+    expect_output("object_values.later", "[1, 2, 3]");
+}
+
+#[test]
+fn test_object_missing_key_error() {
+    expect_error("object_missing_key.later", "key `z` not found");
+}
+
+// =============================================================================
+// List Operations
+// =============================================================================
+
+#[test]
+fn test_list_push() {
+    expect_output("list_push.later", "[1, 2, 3, 4]");
+}
+
+#[test]
+fn test_list_pop() {
+    expect_output("list_pop.later", "[1, 2]");
+}
+
+#[test]
+fn test_list_length() {
+    expect_output("list_len.later", "5");
+}
+
+#[test]
+fn test_list_map() {
+    expect_output("list_map.later", "[2, 4, 6]");
+}
+
+#[test]
+fn test_list_filter() {
+    expect_output("list_filter.later", "[2, 4]");
+}
+
+#[test]
+fn test_list_reduce() {
+    expect_output("list_reduce.later", "15");
+}
+
+// =============================================================================
+// Higher-Order Functions
+// =============================================================================
+
+#[test]
+fn test_fn_as_value() {
+    expect_output("fn_value.later", "10");
+}
+
+#[test]
+fn test_fn_return_fn() {
+    expect_output("fn_return_fn.later", "15");
+}
+
+#[test]
+fn test_currying() {
+    expect_output("curry.later", "12");
+}
+
+// =============================================================================
+// Scope and Shadowing
+// =============================================================================
+
+#[test]
+fn test_shadowing() {
+    expect_output("shadowing.later", "20");
+}
+
+#[test]
+fn test_scope_block() {
+    expect_output("scope_block.later", "outer");
+}
+
+#[test]
+fn test_scope_fn() {
+    expect_output("scope_fn.later", "10");
+}
+
+// =============================================================================
+// While Loop (if we support it as sugar)
+// =============================================================================
+
+#[test]
+fn test_while_loop() {
+    expect_output("while.later", "5");
+}
+
+// =============================================================================
+// Assert / Debug
+// =============================================================================
+
+#[test]
+fn test_assert_pass() {
+    expect_output("assert_pass.later", "ok");
+}
+
+#[test]
+fn test_assert_fail() {
+    expect_error("assert_fail.later", "assertion failed");
+}
+
+#[test]
+fn test_debug_print() {
+    expect_output("debug.later", "debug: 42\n42");
+}

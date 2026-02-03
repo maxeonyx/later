@@ -1,0 +1,4 @@
+// Debug print
+let x = 42
+debug(x)
+x

@@ -1,0 +1,4 @@
+// Function as value
+fn double(x) x * 2
+let f = double
+f(5)

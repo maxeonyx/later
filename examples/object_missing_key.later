@@ -1,0 +1,3 @@
+// ERROR: Object missing key
+let obj = { a: 1, b: 2 }
+obj.z
