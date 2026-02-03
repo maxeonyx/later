@@ -1,0 +1,5 @@
+// Type annotation on function parameter
+fn double(x: Int) {
+    x * 2
+}
+double(5)

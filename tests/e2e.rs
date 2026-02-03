@@ -775,3 +775,248 @@ fn test_size_bounded_list() {
     // List with max size annotation
     expect_output("size_bounded_list.later", "max size: 100");
 }
+
+// =============================================================================
+// PHASE 1: Strings
+// =============================================================================
+
+#[test]
+fn test_string_literal() {
+    expect_output("string_literal.later", "hello world");
+}
+
+#[test]
+fn test_string_escape() {
+    expect_output("string_escape.later", "line1\nline2");
+}
+
+#[test]
+fn test_string_concat() {
+    expect_output("string_concat.later", "hello world");
+}
+
+#[test]
+fn test_string_interpolation() {
+    expect_output("string_interp.later", "value is 42");
+}
+
+#[test]
+fn test_string_length() {
+    expect_output("string_length.later", "5");
+}
+
+#[test]
+fn test_string_index() {
+    expect_output("string_index.later", "e");
+}
+
+// =============================================================================
+// Error Messages - Quality
+// =============================================================================
+
+#[test]
+fn test_error_undefined_variable() {
+    expect_error("error_undefined.later", "undefined variable `foo`");
+}
+
+#[test]
+fn test_error_type_mismatch() {
+    expect_error("error_type_mismatch.later", "expected number, got string");
+}
+
+#[test]
+fn test_error_wrong_arg_count() {
+    expect_error("error_arg_count.later", "expected 2 arguments, got 3");
+}
+
+#[test]
+fn test_error_line_number() {
+    // Error message should include line number
+    expect_error("error_line_number.later", "line 5");
+}
+
+#[test]
+fn test_error_syntax_unexpected_token() {
+    expect_error("error_syntax.later", "unexpected token");
+}
+
+#[test]
+fn test_error_unclosed_brace() {
+    expect_error("error_unclosed_brace.later", "unclosed `{`");
+}
+
+#[test]
+fn test_error_unclosed_bracket() {
+    expect_error("error_unclosed_bracket.later", "unclosed `[`");
+}
+
+#[test]
+fn test_error_unclosed_paren() {
+    expect_error("error_unclosed_paren.later", "unclosed `(`");
+}
+
+// =============================================================================
+// Pattern Matching - Edge Cases
+// =============================================================================
+
+#[test]
+fn test_pattern_list_length_mismatch() {
+    expect_error("pattern_list_mismatch.later", "expected 3 elements, got 2");
+}
+
+#[test]
+fn test_pattern_object_missing_key() {
+    expect_error("pattern_object_missing.later", "missing key `z`");
+}
+
+#[test]
+fn test_pattern_nested_failure() {
+    expect_error("pattern_nested_fail.later", "pattern match failed");
+}
+
+// =============================================================================
+// Negative Indices
+// =============================================================================
+
+#[test]
+fn test_list_negative_index() {
+    // Python-style negative indexing
+    expect_output("list_negative_index.later", "3");
+}
+
+#[test]
+fn test_string_negative_index() {
+    expect_output("string_negative_index.later", "o");
+}
+
+// =============================================================================
+// Edge Cases
+// =============================================================================
+
+#[test]
+fn test_deeply_nested_structure() {
+    expect_output("nested_deep.later", "42");
+}
+
+#[test]
+fn test_many_params() {
+    // Function with many parameters
+    expect_output("many_params.later", "55");
+}
+
+#[test]
+fn test_empty_object() {
+    expect_output("empty_object.later", "{}");
+}
+
+#[test]
+fn test_empty_list() {
+    expect_output("empty_list.later", "[]");
+}
+
+#[test]
+fn test_object_shorthand() {
+    // { x, y } as shorthand for { x: x, y: y }
+    expect_output("object_shorthand.later", "{ x: 10, y: 20 }");
+}
+
+#[test]
+fn test_keyword_as_object_key() {
+    // Keywords can be used as object keys
+    expect_output("keyword_key.later", "1");
+}
+
+#[test]
+fn test_chained_property_access() {
+    expect_output("chained_access.later", "42");
+}
+
+#[test]
+fn test_chained_index_access() {
+    expect_output("chained_index.later", "5");
+}
+
+// =============================================================================
+// Division and Modulo
+// =============================================================================
+
+#[test]
+fn test_integer_division() {
+    expect_output("int_div.later", "3");
+}
+
+#[test]
+fn test_modulo() {
+    expect_output("modulo.later", "2");
+}
+
+#[test]
+fn test_division_by_zero() {
+    expect_error("div_zero.later", "division by zero");
+}
+
+// =============================================================================
+// Nil/Unit Value
+// =============================================================================
+
+#[test]
+fn test_nil_literal() {
+    expect_output("nil.later", "nil");
+}
+
+#[test]
+fn test_fn_no_return() {
+    // Function without explicit return gives nil
+    expect_output("fn_no_return.later", "nil");
+}
+
+// =============================================================================
+// Defer/Cleanup Syntax
+// =============================================================================
+
+#[test]
+fn test_defer_basic() {
+    expect_output("defer_basic.later", "first\nsecond\ndeferred");
+}
+
+#[test]
+fn test_defer_order() {
+    // Multiple defers run in reverse order
+    expect_output("defer_order.later", "3\n2\n1");
+}
+
+#[test]
+fn test_defer_with_value() {
+    // Defer captures value at defer time, not run time
+    expect_output("defer_capture.later", "x was 1");
+}
+
+#[test]
+fn test_defer_on_error() {
+    // Defer runs even when error propagates
+    expect_output("defer_on_error.later", "deferred\nerror: boom");
+}
+
+// =============================================================================
+// Type Annotations (Optional)
+// =============================================================================
+
+#[test]
+fn test_type_annotation_let() {
+    expect_output("type_annotation.later", "42");
+}
+
+#[test]
+fn test_type_annotation_fn_param() {
+    expect_output("type_annotation_fn.later", "10");
+}
+
+#[test]
+fn test_type_annotation_fn_return() {
+    expect_output("type_annotation_return.later", "15");
+}
+
+#[test]
+fn test_type_mismatch_annotation() {
+    expect_error("type_annotation_error.later", "expected Int, got String");
+}

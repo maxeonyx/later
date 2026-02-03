@@ -1,0 +1,13 @@
+// Defer runs even on error
+let error = symbol()
+
+fn example() {
+    defer { print("deferred") }
+    send error with "boom"
+}
+
+handle {
+    example()
+} error e {
+    print("error: {e}")
+}

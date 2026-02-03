@@ -1,0 +1,3 @@
+// ERROR: Unclosed parenthesis
+let x = (1 + 2
+// missing closing paren

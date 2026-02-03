@@ -1,0 +1,3 @@
+// String interpolation
+let x = 42
+"value is {x}"

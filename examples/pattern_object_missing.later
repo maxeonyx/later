@@ -1,0 +1,2 @@
+// ERROR: Pattern object missing key
+let { x, y, z } = { x: 1, y: 2 }

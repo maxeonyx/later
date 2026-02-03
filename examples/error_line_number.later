@@ -1,0 +1,6 @@
+// ERROR: Test that line number is reported
+let a = 1
+let b = 2
+let c = 3
+let d = 4
+undefined_var  // Error should say line 5

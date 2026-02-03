@@ -1,0 +1,5 @@
+// Type annotation on function return
+fn add(a: Int, b: Int): Int {
+    a + b
+}
+add(7, 8)

@@ -1,0 +1,5 @@
+// ERROR: Unclosed brace
+let obj = {
+    a: 1,
+    b: 2
+// missing closing brace

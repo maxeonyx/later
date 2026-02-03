@@ -1,0 +1,7 @@
+// Keywords as object keys
+let obj = {
+    if: 1,
+    let: 2,
+    fn: 3,
+}
+obj.if

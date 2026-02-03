@@ -1,0 +1,2 @@
+// ERROR: Type annotation mismatch
+let x: Int = "hello"

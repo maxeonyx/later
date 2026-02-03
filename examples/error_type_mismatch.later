@@ -1,0 +1,2 @@
+// ERROR: Type mismatch
+5 + "hello"

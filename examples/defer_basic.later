@@ -1,0 +1,7 @@
+// Basic defer - runs at end of scope
+fn example() {
+    defer { print("deferred") }
+    print("first")
+    print("second")
+}
+example()
