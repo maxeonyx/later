@@ -1439,7 +1439,7 @@ fn test_currying() {
 
 #[test]
 fn test_shadowing() {
-    expect_output("shadowing.later", "20");
+    expect_output("shadowbinding.later", "20");
 }
 
 #[test]
