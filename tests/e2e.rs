@@ -1795,3 +1795,186 @@ fn test_generic_constraint_violation() {
         "type does not satisfy constraint",
     );
 }
+
+// =============================================================================
+// Identifier Edge Cases
+// =============================================================================
+
+#[test]
+fn test_kebab_case_variable() {
+    // Kebab-case identifiers are valid
+    expect_output("kebab_ident.later", "42");
+}
+
+#[test]
+fn test_kebab_minus_disambiguation() {
+    // `a-b` could be identifier or subtraction - context determines
+    expect_output("kebab_minus.later", "10");
+}
+
+#[test]
+fn test_underscore_identifier() {
+    // Underscore alone is a wildcard, can't be used as variable
+    expect_error("underscore_ident.later", "cannot use `_` as variable");
+}
+
+#[test]
+fn test_keyword_as_field() {
+    // Keywords can be field names
+    expect_output("keyword_field.later", "42");
+}
+
+// =============================================================================
+// String Edge Cases
+// =============================================================================
+
+#[test]
+fn test_string_empty() {
+    expect_output("string_empty.later", "");
+}
+
+#[test]
+fn test_string_unicode() {
+    expect_output("string_unicode.later", "hello 世界 🌍");
+}
+
+#[test]
+fn test_string_multiline() {
+    // Strings can span multiple lines
+    expect_output("string_multiline.later", "line1\nline2");
+}
+
+#[test]
+fn test_string_interpolation_nested() {
+    // Interpolation can contain expressions
+    expect_output("string_interp_nested.later", "result: 15");
+}
+
+#[test]
+fn test_string_interpolation_escape() {
+    // Escaped braces in interpolated strings
+    expect_output("string_interp_escape.later", "literal {brace}");
+}
+
+// =============================================================================
+// Operator Precedence
+// =============================================================================
+
+#[test]
+fn test_precedence_mul_add() {
+    // Multiplication before addition? Or left-to-right like Raro?
+    expect_output("prec_mul_add.later", "14");
+}
+
+#[test]
+fn test_precedence_comparison_chain() {
+    // Chained comparisons: 1 < 2 < 3
+    expect_output("prec_chain.later", "true");
+}
+
+#[test]
+fn test_precedence_pipe_vs_call() {
+    // Pipe has low precedence
+    expect_output("prec_pipe.later", "15");
+}
+
+#[test]
+fn test_precedence_and_or() {
+    // and binds tighter than or
+    expect_output("prec_and_or.later", "true");
+}
+
+// =============================================================================
+// Function Edge Cases
+// =============================================================================
+
+#[test]
+fn test_fn_no_params() {
+    expect_output("fn_no_params.later", "42");
+}
+
+#[test]
+fn test_fn_single_expr_body() {
+    // Single expression function without braces
+    expect_output("fn_single_expr.later", "10");
+}
+
+#[test]
+fn test_fn_rest_params() {
+    // Rest parameter: fn f(a, ...rest) { }
+    expect_output("fn_rest.later", "[2, 3, 4]");
+}
+
+#[test]
+fn test_fn_default_params() {
+    // Default parameter values
+    expect_output("fn_default.later", "42");
+}
+
+#[test]
+fn test_fn_named_args() {
+    // Named arguments: f(x: 1, y: 2)
+    expect_output("fn_named_args.later", "3");
+}
+
+#[test]
+fn test_fn_recursive_tail() {
+    // Tail recursive function should not overflow stack
+    expect_output("fn_tail_rec.later", "1000000");
+}
+
+// =============================================================================
+// Defer Edge Cases
+// =============================================================================
+
+#[test]
+fn test_defer_order_nested() {
+    // Nested defers in nested blocks
+    expect_output("defer_nested.later", "inner\nouter");
+}
+
+#[test]
+fn test_defer_in_loop() {
+    // Defer in loop runs each iteration
+    expect_output("defer_loop.later", "0\n1\n2");
+}
+
+#[test]
+fn test_defer_captures_current_value() {
+    // Defer captures value at defer time, not cleanup time
+    expect_output("defer_capture.later", "1");
+}
+
+#[test]
+fn test_defer_return_value() {
+    // Return inside defer block should be an error
+    expect_error("defer_return.later", "cannot return from defer block");
+}
+
+#[test]
+fn test_defer_break() {
+    // Break inside defer should be an error
+    expect_error("defer_break.later", "cannot break from defer block");
+}
+
+// =============================================================================
+// Block Expression Edge Cases
+// =============================================================================
+
+#[test]
+fn test_block_value() {
+    // Block evaluates to last expression
+    expect_output("block_value.later", "3");
+}
+
+#[test]
+fn test_block_empty() {
+    // Empty block evaluates to nil
+    expect_output("block_empty.later", "nil");
+}
+
+#[test]
+fn test_block_trailing_semicolon() {
+    // Trailing semicolon means nil
+    expect_output("block_trailing_semi.later", "nil");
+}

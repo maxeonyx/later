@@ -1,0 +1,4 @@
+// Nested expression in interpolation
+let x = 5
+let y = 10
+"result: {x + y}"

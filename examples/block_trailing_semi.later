@@ -1,0 +1,4 @@
+// Trailing semicolon means nil result
+{
+    42;
+}

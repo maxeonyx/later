@@ -1,0 +1,6 @@
+// Rest parameters
+fn tail(first, ...rest) {
+    rest
+}
+
+tail(1, 2, 3, 4)

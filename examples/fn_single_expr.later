@@ -1,0 +1,4 @@
+// Single expression function (no braces)
+fn double(x) x * 2
+
+double(5)

@@ -1,0 +1,10 @@
+// Tail recursion should not overflow stack
+fn count(n, acc) {
+    if n == 0 {
+        acc
+    } else {
+        count(n - 1, acc + 1)
+    }
+}
+
+count(1000000, 0)

@@ -1,0 +1,3 @@
+// Operator precedence: traditional (mul before add)
+// 2 + 3 * 4 = 2 + 12 = 14
+2 + 3 * 4

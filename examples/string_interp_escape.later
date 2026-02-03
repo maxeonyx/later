@@ -1,0 +1,2 @@
+// Escaped braces in interpolated string
+"literal \{brace\}"

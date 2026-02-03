@@ -1,8 +1,5 @@
 // Defer captures value at defer time
-fn example() {
-    let mut x = 1
-    defer { print("x was {x}") }
-    x = 2
-    x = 3
-}
-example()
+let mut x = 1
+defer { print(x) }
+x = 2
+// Should print 1, not 2

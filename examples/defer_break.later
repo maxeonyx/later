@@ -1,0 +1,6 @@
+// Error: cannot break from defer block
+loop {
+    defer {
+        break  // Error!
+    }
+}
