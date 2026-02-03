@@ -1862,8 +1862,8 @@ fn test_string_interpolation_escape() {
 
 #[test]
 fn test_precedence_mul_add() {
-    // Multiplication before addition? Or left-to-right like Raro?
-    expect_output("prec_mul_add.later", "14");
+    // Left-to-right precedence (no BODMAS) like Raro?
+    expect_output("prec_mul_add.later", "20");
 }
 
 #[test]

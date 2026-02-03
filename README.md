@@ -9,6 +9,7 @@ A programming language where cleanup is not an afterthought.
 - Effects for control flow (errors, generators, cancellation)
 - Fallible cleanup that the type system acknowledges
 - Multistage programming (build → startup → runtime)
+- Left-to-right evaluation (BODMAS is buried 🪦)
 
 ## Status
 
