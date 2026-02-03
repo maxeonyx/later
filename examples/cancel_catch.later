@@ -1,0 +1,14 @@
+// Cancellation is an effect that can be caught
+spawn {
+    handle {
+        loop {
+            sleep(1)
+        }
+    } cancel _ {
+        "caught cancellation"
+    }
+} as task
+
+sleep(10)
+task | cancel
+task | await

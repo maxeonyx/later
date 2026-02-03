@@ -1,0 +1,17 @@
+// During cleanup, cancellation is blocked
+let mut log = []
+
+spawn {
+    defer {
+        // This cleanup cannot be cancelled
+        sleep(100)  // Slow cleanup
+        log = [...log, "cleanup completed fully"]
+    }
+    sleep(1000)
+} as task
+
+sleep(10)
+task | cancel
+task | await-cancelled
+
+log | join("\n")

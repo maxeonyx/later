@@ -1,0 +1,10 @@
+// Effect as capability - function must declare its effects
+fn do-io() performs IO {
+    print("io performed")
+}
+
+handle {
+    do-io()
+} IO action {
+    action | perform
+}

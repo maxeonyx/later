@@ -1,0 +1,18 @@
+// Cancellation in a loop with cleanup
+let mut result = []
+
+spawn {
+    defer { result = [...result, "cleanup done"] }
+    loop {
+        sleep(1)
+    }
+} as task
+
+handle {
+    task | cancel
+    task | await
+} cancel _ {
+    result = [...result, "loop cancelled"]
+}
+
+result | join("\n")

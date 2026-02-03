@@ -1,0 +1,11 @@
+// Split a linear aggregate and consume pieces separately
+let pair = {
+    a: open("a.txt"),
+    b: open("b.txt"),
+}
+
+let { a, b } = pair  // Destructure, each piece is now separate
+
+a | close
+b | close
+"both consumed"

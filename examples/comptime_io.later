@@ -1,0 +1,4 @@
+// ERROR: IO at comptime is not allowed
+@comptime {
+    let data = read-file("config.txt")  // Error: cannot perform IO at compile time
+}

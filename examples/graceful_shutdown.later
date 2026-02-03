@@ -1,0 +1,19 @@
+// Graceful shutdown pattern
+fn run-server() {
+    let db = connect-db()
+    let cache = connect-cache()
+    let server = start-http()
+    
+    defer {
+        server | stop
+        cache | close
+        db | close
+        print("all resources released")
+    }
+    
+    // Wait for shutdown signal
+    wait-for-signal()
+    print("shutdown complete")
+}
+
+run-server()

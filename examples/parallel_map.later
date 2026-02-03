@@ -1,0 +1,9 @@
+// Parallel map
+fn parallel-map(list, f) {
+    list 
+        | map(fn(x) spawn { f(x) })
+        | all 
+        | await
+}
+
+[1, 2, 3, 4, 5] | parallel-map(fn(x) x * 2)

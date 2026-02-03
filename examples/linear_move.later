@@ -1,0 +1,4 @@
+// ERROR: After move, original binding is invalid
+let f = open("data.txt")
+let g = f  // f is moved to g
+f | read   // Error: f has been moved

@@ -1,0 +1,3 @@
+// Import with destructuring
+import { add } from "./math_lib.later"
+add(1, 2)

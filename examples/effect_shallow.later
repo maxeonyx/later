@@ -1,0 +1,18 @@
+// Shallow handler only handles the first occurrence
+let my-effect = symbol()
+
+fn work() {
+    send my-effect with 1
+    send my-effect with 2  // This propagates up
+}
+
+handle shallow {
+    handle {
+        work()
+    } my-effect v {
+        print("handled once")
+        continue
+    }
+} my-effect v {
+    // Second occurrence handled here
+}

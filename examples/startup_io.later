@@ -1,0 +1,5 @@
+// IO at startup time is OK
+@startup {
+    let config = read-file("config.txt")
+    print("read config successfully")
+}

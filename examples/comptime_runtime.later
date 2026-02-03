@@ -1,0 +1,8 @@
+// ERROR: Cannot use runtime value in comptime expression
+fn get-size() {
+    read-env("SIZE") | parse-int
+}
+
+@comptime {
+    let size = get-size()  // Error: get-size uses runtime IO
+}

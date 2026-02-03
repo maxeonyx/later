@@ -5,9 +5,9 @@ This document tracks the implementation plan. It is updated as work progresses.
 ## Current Status
 
 **Phase 0: Project Setup** - COMPLETE
-**Phase 1-8: Tests Written** - 109 failing E2E tests, implementation pending
+**Phase 1-10: Tests Written** - 190 failing E2E tests, implementation pending
 
-All test infrastructure is in place. Tests cover:
+All test infrastructure is in place. Tests comprehensively cover:
 - Basic expressions, arithmetic, booleans, comparisons
 - Control flow (if/else, loop, break, continue)
 - Let bindings, as-bindings, pattern matching
@@ -19,11 +19,15 @@ All test infrastructure is in place. Tests cover:
 - Borrowing
 - Closures (capture, linear restrictions)
 - Effects (send, handle, continue, propagation, generators)
-- Cancellation (cleanup ordering, propagation, during cleanup)
-- Structured concurrency (spawn, await, all, race, timeout)
+- Cancellation (cleanup ordering, propagation, during cleanup, flag checks)
+- Structured concurrency (spawn, await, all, race, timeout, nursery, channels)
 - Fallible cleanup (retry, failure handling)
-- Memory size tracking
-- Multistage (@comptime, @startup)
+- Memory size tracking (comptime, startup, bounded)
+- Multistage (@comptime, @startup, stage errors)
+- Strings (literals, escapes, interpolation, operations)
+- Error messages (quality, line numbers, specific errors)
+- Import/export
+- Real-world patterns (graceful shutdown, retry, pools, parallel map)
 
 ## Phases
 

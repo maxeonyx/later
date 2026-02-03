@@ -1,0 +1,9 @@
+// Bounded channel
+let ch = channel(3)  // Buffer size 3
+
+ch | send("1")
+ch | send("2")
+ch | send("3")
+// ch | send("4") would block
+
+"sent 3 messages"

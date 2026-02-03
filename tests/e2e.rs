@@ -1020,3 +1020,286 @@ fn test_type_annotation_fn_return() {
 fn test_type_mismatch_annotation() {
     expect_error("type_annotation_error.later", "expected Int, got String");
 }
+
+// =============================================================================
+// Cancellation - Core Feature Tests
+// =============================================================================
+
+#[test]
+fn test_cancel_simple_task() {
+    expect_output("cancel_simple.later", "cancelled");
+}
+
+#[test]
+fn test_cancel_flag_check() {
+    // Demonstrates that cancellation points exist and are checked
+    expect_output("cancel_flag.later", "iterations: 100\ncancelled");
+}
+
+#[test]
+fn test_cancel_in_loop() {
+    // Loop should check cancellation and exit cleanly
+    expect_output("cancel_loop.later", "loop cancelled\ncleanup done");
+}
+
+#[test]
+fn test_cancel_blocks_in_cleanup() {
+    // While in cleanup, further cancellation should be blocked
+    expect_output("cancel_in_cleanup.later", "cleanup completed fully");
+}
+
+#[test]
+fn test_cancel_effect_catchable() {
+    // Cancellation is an effect that can be caught
+    expect_output("cancel_catch.later", "caught cancellation");
+}
+
+// =============================================================================
+// Linear Types - Comprehensive
+// =============================================================================
+
+#[test]
+fn test_linear_must_use() {
+    // Linear type returned from function must be used
+    expect_error("linear_must_use.later", "value of type `File` must be used");
+}
+
+#[test]
+fn test_linear_move_semantics() {
+    // After move, original binding is invalid
+    expect_error("linear_move.later", "value `f` has been moved");
+}
+
+#[test]
+fn test_linear_split() {
+    // Can split a linear aggregate and consume pieces separately
+    expect_output("linear_split.later", "both consumed");
+}
+
+#[test]
+fn test_linear_drop_explicit() {
+    // Explicit drop for when you can't use a value
+    expect_output("linear_drop.later", "dropped");
+}
+
+#[test]
+fn test_linear_in_match() {
+    // Pattern match on linear must consume in all branches
+    expect_output("linear_match.later", "consumed");
+}
+
+#[test]
+fn test_linear_in_match_error() {
+    // Pattern match on linear with unconsumed branch
+    expect_error(
+        "linear_match_error.later",
+        "linear value not consumed in branch",
+    );
+}
+
+// =============================================================================
+// Structured Concurrency - Comprehensive
+// =============================================================================
+
+#[test]
+fn test_nursery_basic() {
+    // Alternative name for spawn scope
+    expect_output("nursery.later", "all done");
+}
+
+#[test]
+fn test_child_outlives_parent_error() {
+    // Child cannot escape parent scope
+    expect_error("child_escape.later", "task cannot outlive its parent scope");
+}
+
+#[test]
+fn test_concurrent_mutation() {
+    // Concurrent tasks cannot mutate shared state (borrow checker)
+    expect_error(
+        "concurrent_mut.later",
+        "cannot mutably borrow while task holds reference",
+    );
+}
+
+#[test]
+fn test_channel_send_receive() {
+    expect_output("channel.later", "received: hello");
+}
+
+#[test]
+fn test_channel_bounded() {
+    expect_output("channel_bounded.later", "sent 3 messages");
+}
+
+// =============================================================================
+// Effects - Comprehensive
+// =============================================================================
+
+#[test]
+fn test_effect_as_capability() {
+    // Effect types act as capabilities
+    expect_output("effect_capability.later", "io performed");
+}
+
+#[test]
+fn test_effect_composition() {
+    // Multiple effects compose
+    expect_output("effect_compose.later", "yielded: 1\nlogged: step 1");
+}
+
+#[test]
+fn test_effect_shallow_handler() {
+    // Shallow handler only handles once
+    expect_output("effect_shallow.later", "handled once");
+}
+
+#[test]
+fn test_effect_deep_handler() {
+    // Deep handler handles all occurrences
+    expect_output("effect_deep.later", "handled: 1\nhandled: 2\nhandled: 3");
+}
+
+#[test]
+fn test_effect_state() {
+    // State effect pattern
+    expect_output("effect_state.later", "final: 10");
+}
+
+// =============================================================================
+// Multistage - Comprehensive
+// =============================================================================
+
+#[test]
+fn test_comptime_type_check() {
+    // Type error at comptime is a compile error
+    expect_error("comptime_type_error.later", "comptime error: type mismatch");
+}
+
+#[test]
+fn test_comptime_io_error() {
+    // IO at comptime is an error (IO requires runtime)
+    expect_error("comptime_io.later", "cannot perform IO at compile time");
+}
+
+#[test]
+fn test_startup_io_ok() {
+    // IO at startup is OK
+    expect_output("startup_io.later", "read config successfully");
+}
+
+#[test]
+fn test_stage_residual() {
+    // Show that comptime produces smaller residual
+    expect_output("stage_residual.later", "120"); // 5! computed at compile time
+}
+
+#[test]
+fn test_runtime_value_at_comptime_error() {
+    // Can't use runtime value at comptime
+    expect_error(
+        "comptime_runtime.later",
+        "runtime value used in comptime expression",
+    );
+}
+
+// =============================================================================
+// Memory/Size Tracking - Comprehensive
+// =============================================================================
+
+#[test]
+fn test_size_known_at_comptime() {
+    expect_output("size_comptime.later", "size known: 64");
+}
+
+#[test]
+fn test_size_known_at_startup() {
+    expect_output("size_startup.later", "size determined by config");
+}
+
+#[test]
+fn test_size_overflow_error() {
+    expect_error("size_overflow.later", "exceeds maximum size");
+}
+
+#[test]
+fn test_bounded_buffer() {
+    expect_output("bounded_buffer.later", "buffer full");
+}
+
+// =============================================================================
+// Pipe Operator - Advanced
+// =============================================================================
+
+#[test]
+fn test_pipe_with_partial() {
+    // Pipe with partial application: x | add(5) means add(x, 5)
+    expect_output("pipe_partial.later", "15");
+}
+
+#[test]
+fn test_pipe_to_method() {
+    // Method-style: x | .len()
+    expect_output("pipe_method.later", "5");
+}
+
+#[test]
+fn test_pipe_anonymous() {
+    // Pipe into anonymous function
+    expect_output("pipe_anon.later", "100");
+}
+
+// =============================================================================
+// Import/Export
+// =============================================================================
+
+#[test]
+fn test_import_basic() {
+    expect_output("import_basic.later", "42");
+}
+
+#[test]
+fn test_import_destructure() {
+    expect_output("import_destructure.later", "3");
+}
+
+#[test]
+fn test_export_object() {
+    // A file's last expression is its export
+    expect_output("export_test.later", "imported: 10");
+}
+
+// =============================================================================
+// Real-World Patterns
+// =============================================================================
+
+#[test]
+fn test_graceful_shutdown() {
+    expect_output(
+        "graceful_shutdown.later",
+        "shutdown complete\nall resources released",
+    );
+}
+
+#[test]
+fn test_retry_with_backoff() {
+    expect_output("retry_backoff.later", "succeeded after 3 attempts");
+}
+
+#[test]
+fn test_resource_pool() {
+    expect_output(
+        "resource_pool.later",
+        "acquired\nused\nreleased back to pool",
+    );
+}
+
+#[test]
+fn test_timeout_with_cleanup() {
+    expect_output("timeout_cleanup.later", "timed out\nresource cleaned up");
+}
+
+#[test]
+fn test_parallel_map() {
+    expect_output("parallel_map.later", "[2, 4, 6, 8, 10]");
+}

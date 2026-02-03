@@ -1,0 +1,26 @@
+// State effect pattern
+let get-state = symbol()
+let set-state = symbol()
+
+fn counter() {
+    let mut i = 0
+    loop {
+        if i >= 10 { break }
+        let current = send get-state
+        send set-state with (current + 1)
+        i = i + 1
+    }
+}
+
+let mut state = 0
+
+handle {
+    counter()
+} get-state _ {
+    continue with state
+} set-state new-value {
+    state = new-value
+    continue
+}
+
+"final: {state}"

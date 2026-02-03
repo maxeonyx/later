@@ -1,0 +1,10 @@
+// ERROR: Concurrent tasks cannot mutate shared state
+let mut x = 0
+
+spawn {
+    x = x + 1  // Error: cannot mutably borrow
+}
+
+spawn {
+    x = x + 1  // Error: concurrent mutable access
+}

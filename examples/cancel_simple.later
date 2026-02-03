@@ -1,0 +1,9 @@
+// Simple task cancellation
+spawn {
+    loop {
+        // This will be cancelled
+    }
+} as task
+
+task | cancel
+"cancelled"

@@ -4,64 +4,88 @@ Immediate tasks for the current/next agent.
 
 ## Current State
 
-109 E2E tests written, all failing with "not yet implemented". The test suite comprehensively covers the language features described in VISION.md.
+**190 failing E2E tests** - Comprehensive test suite covering the full language vision.
 
-## Now (Spec Mode - Continue Adding Tests)
+The test suite now covers:
+- Basic syntax (expressions, bindings, functions, objects, lists)
+- Control flow and patterns
+- Linear types and borrowing
+- Effects and handlers
+- Structured concurrency
+- Cancellation (core innovation)
+- Multistage execution
+- Memory tracking
+- Import/export
+- Real-world usage patterns
 
-Consider adding tests for:
+## Now (Spec Mode - Optional Additional Tests)
 
-- [ ] String literals and operations
-- [ ] String interpolation
-- [ ] Negative list indices (Python-style?)
-- [ ] Chained comparisons (`1 < x < 10`)?
-- [ ] Error messages - test that errors are helpful and point to the right location
-- [ ] More edge cases in pattern matching (mismatched lengths, missing keys)
-- [ ] Unicode identifiers?
-- [ ] Overflow behavior (big integers?)
+The test suite is comprehensive. Optional additions:
+
+- [ ] Float/decimal numbers
+- [ ] Raw strings (no escape processing)
+- [ ] Multi-line strings
+- [ ] Binary/hex literals
+- [ ] Bitwise operators
+- [ ] Range syntax (`1..10`)
+- [ ] For loops (sugar for iterator + handle)
+- [ ] Match expressions
+- [ ] Guard clauses
+- [ ] Doc comments
+- [ ] WASM-specific tests
 
 ## Now (Build Mode - Start Implementation)
 
-When switching to build mode, start with the simplest tests first:
+Ready to switch to build mode. Recommended order:
 
-1. [ ] `empty.later` - handle empty file
-2. [ ] `int_literal.later` - parse and print integer
-3. [ ] `bool_true.later` / `bool_false.later` - parse and print booleans
-4. [ ] `add.later`, `sub.later`, `mul.later`, `div.later` - binary arithmetic
-5. [ ] `let_simple.later` - let bindings
-6. [ ] `if_true.later` / `if_false.later` - basic conditionals
+### Week 1: Core Parsing & Evaluation
+1. Lexer - tokenize source into token stream
+2. Parser - build AST from tokens
+3. Interpreter - evaluate simple expressions
+4. Tests passing: `empty`, `int_literal`, `bool_*`, `add`, `sub`, `mul`, `div`
 
-Suggested implementation order:
-1. Lexer (tokenize source)
-2. Parser (build AST) 
-3. Interpreter (evaluate AST)
-4. Linear type checker (validate ownership)
+### Week 2: Bindings & Functions
+1. Let bindings, variables, scopes
+2. Function definitions and calls
+3. Objects and lists
+4. Tests passing: `let_*`, `fn_*`, `object_*`, `list_*`
 
-## Future Tests to Write
+### Week 3: Control Flow & Patterns
+1. If/else expressions
+2. Loops (loop, break, continue)
+3. Pattern matching
+4. Tests passing: `if_*`, `loop_*`, `pattern_*`
 
-### Syntax Edge Cases
-- [ ] Very long identifiers
-- [ ] Keywords as object keys (`{ if: 1, let: 2 }`)
-- [ ] Empty objects and lists in various positions
-- [ ] Deeply nested structures
+### Week 4: Linear Types
+1. Ownership tracking
+2. Consume checking
+3. Error on unused/double-use
+4. Tests passing: `linear_*`
 
-### Error Quality
-- [ ] Syntax error messages point to correct line/column
-- [ ] Type error messages name the offending variable
-- [ ] Linear type errors explain what wasn't consumed
+### Week 5+: Advanced Features
+- Effects, cancellation, concurrency, multistage...
 
-### Advanced Features
-- [ ] Effect handlers that don't continue (early return)
-- [ ] Nested loops with break/continue to outer
-- [ ] Complex ownership through multiple function calls
-- [ ] Concurrent access patterns (borrow during spawn)
+## Architecture Notes
 
-## Open Design Questions (Need Tests/Discussion)
+Suggested module structure:
+```
+src/
+  lexer.rs     - Tokenization
+  ast.rs       - AST types
+  parser.rs    - Parsing
+  types.rs     - Type system, linear tracking
+  interp.rs    - Tree-walking interpreter
+  effects.rs   - Effect handling
+  tasks.rs     - Structured concurrency runtime
+  stages.rs    - Multistage execution
+```
 
-- What happens when you `break` from inside a `handle`?
-- Can effects cross task boundaries?
-- How do linear types interact with closures that outlive their scope?
-- What's the syntax for cleanup blocks on individual values?
-- How do you express "this function may perform IO effects"?
+## Open Questions
+
+- Defer capture semantics: capture at defer time or reference?
+- Effect handler syntax: `handle {} my-effect v {}` vs `handle {} { my-effect v {} }`?
+- Pipe partial application: `x | f(y)` means `f(x, y)` or `f(y)(x)`?
+- Linear type syntax for return types?
 
 ## Blocked
 

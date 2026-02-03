@@ -1,0 +1,15 @@
+// Deep handler handles all occurrences
+let my-effect = symbol()
+
+fn work() {
+    send my-effect with 1
+    send my-effect with 2
+    send my-effect with 3
+}
+
+handle {
+    work()
+} my-effect v {
+    print("handled: {v}")
+    continue
+}

@@ -1,0 +1,9 @@
+// Channel send and receive
+let ch = channel()
+
+spawn {
+    ch | send("hello")
+}
+
+let msg = ch | receive
+"received: {msg}"

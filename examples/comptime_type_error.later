@@ -1,0 +1,4 @@
+// ERROR: Type error at comptime is a compile error
+@comptime {
+    5 + "hello"  // Type error at compile time
+}

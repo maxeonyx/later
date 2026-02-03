@@ -1,0 +1,6 @@
+// Size determined at startup from config
+@startup
+let config = read-config("app.toml")
+
+let buffer: [u8; config.buffer-size] = make-buffer(config.buffer-size)
+"size determined by config"

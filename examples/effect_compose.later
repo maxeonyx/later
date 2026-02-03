@@ -1,0 +1,20 @@
+// Multiple effects compose
+let yield-effect = symbol()
+let log-effect = symbol()
+
+fn work() {
+    send yield-effect with 1
+    send log-effect with "step 1"
+}
+
+handle {
+    handle {
+        work()
+    } yield-effect v {
+        print("yielded: {v}")
+        continue
+    }
+} log-effect msg {
+    print("logged: {msg}")
+    continue
+}

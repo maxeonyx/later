@@ -1,0 +1,3 @@
+// Pipe with partial application: x | add(5) means add(x, 5)
+fn add(a, b) a + b
+10 | add(5)

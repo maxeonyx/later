@@ -1,0 +1,2 @@
+// Pipe to method syntax
+"hello" | .len()

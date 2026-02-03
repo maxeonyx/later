@@ -1,0 +1,15 @@
+// Bounded buffer with max size
+let buffer: BoundedBuffer(10) = bounded-buffer(10)
+
+let mut i = 0
+loop {
+    if i >= 10 { break }
+    buffer | push(i)
+    i = i + 1
+}
+
+if buffer | is-full {
+    "buffer full"
+} else {
+    "buffer has space"
+}

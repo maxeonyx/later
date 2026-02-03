@@ -1,0 +1,3 @@
+// Export test - imports another module
+import "./exportable.later" as m
+"imported: {m.value}"

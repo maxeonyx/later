@@ -1,0 +1,12 @@
+// Resource pool pattern
+let pool = create-pool(fn() {
+    open-connection()
+}, 10)
+
+let conn = pool | acquire
+defer { pool | release(conn) }
+
+print("acquired")
+conn | query("SELECT 1")
+print("used")
+print("released back to pool")

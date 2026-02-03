@@ -1,0 +1,27 @@
+// Retry with exponential backoff
+fn retry-with-backoff(action, max-attempts) {
+    let mut attempt = 1
+    let mut delay = 10
+    
+    loop {
+        handle {
+            action()
+            print("succeeded after {attempt} attempts")
+            break
+        } error e {
+            if attempt >= max-attempts {
+                send error with e
+            }
+            sleep(delay)
+            delay = delay * 2
+            attempt = attempt + 1
+            continue
+        }
+    }
+}
+
+retry-with-backoff(fn() {
+    if random() < 0.7 {
+        send error with "transient failure"
+    }
+}, 5)

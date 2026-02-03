@@ -1,0 +1,8 @@
+// Nursery pattern for structured concurrency
+nursery {
+    spawn { print("task 1") }
+    spawn { print("task 2") }
+    spawn { print("task 3") }
+}  // All tasks complete before exiting nursery
+
+"all done"

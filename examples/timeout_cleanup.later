@@ -1,0 +1,25 @@
+// Timeout with proper cleanup
+let resource = open-resource()
+
+let result = [
+    spawn {
+        sleep(1000)
+        timeout
+    },
+    spawn {
+        let data = resource | slow-read
+        data
+    },
+] | race | await
+
+match result {
+    timeout => {
+        print("timed out")
+        resource | close
+        print("resource cleaned up")
+    }
+    data => {
+        print("got data: {data}")
+        resource | close
+    }
+}
