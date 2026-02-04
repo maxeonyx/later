@@ -1,0 +1,3 @@
+// Symbols are opaque - can't convert to string
+let s = symbol()
+s | to-string

@@ -1,0 +1,4 @@
+// Symbols can be used as object keys (like JS)
+let secret = symbol()
+let obj = { [secret]: "secret value" }
+obj[secret]

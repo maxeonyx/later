@@ -1,0 +1,3 @@
+// Create a symbol
+let s = symbol()
+typeof(s)

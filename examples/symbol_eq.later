@@ -1,0 +1,3 @@
+// A symbol equals itself
+let s = symbol()
+s == s

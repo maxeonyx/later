@@ -1,7 +1,3 @@
-// ERROR: Linear type returned from function must be used
-fn get-file() {
-    open("data.txt")
-}
-
-get-file()  // Return value not used!
-"done"
+// Transaction has no drop - must explicitly consume
+let tx = db.begin()
+// forgot to commit or rollback - ERROR!

@@ -2271,3 +2271,43 @@ fn test_self_reference() {
         "cannot reference value during its own initialization",
     );
 }
+
+// =============================================================================
+// Symbols
+// =============================================================================
+
+#[test]
+fn test_symbol_create() {
+    // Create a unique symbol
+    expect_output("symbol_create.later", "symbol");
+}
+
+#[test]
+fn test_symbol_unique() {
+    // Two symbol() calls produce different symbols
+    expect_output("symbol_unique.later", "false");
+}
+
+#[test]
+fn test_symbol_as_key() {
+    // Symbols can be object keys
+    expect_output("symbol_key.later", "secret value");
+}
+
+#[test]
+fn test_symbol_not_stringable() {
+    // Symbols can't be converted to strings (opaque)
+    expect_error("symbol_to_string.later", "cannot convert symbol to string");
+}
+
+#[test]
+fn test_symbol_equality() {
+    // Same symbol equals itself
+    expect_output("symbol_eq.later", "true");
+}
+
+#[test]
+fn test_symbol_drop() {
+    // The built-in drop symbol for auto-cleanup
+    expect_output("symbol_drop.later", "dropped");
+}
