@@ -101,12 +101,19 @@ Resolved in examples:
 - Booleans: `true`, `false`, `and`, `or`, `not`
 - Cleanup: `defer { }` blocks
 - Pipe: `x | f` calls `f(x)`
+- Precedence: left-to-right, no BODMAS (use `()` to group)
+- Linear types: all values must be consumed; `drop` symbol for auto-cleanup
 
 Still open:
 - Exact defer capture semantics (by value or by reference?)
 - Shallow vs deep handler default
 - Pipe partial application: `x | f(y)` means what exactly?
 - How do linear types appear in function signatures?
+
+## Future Ideas
+
+- [ ] Debug warning for symbols with same name from same module
+- [ ] `symbol("name")` syntax for debug-friendly symbols
 
 ## Blocked
 
