@@ -1,9 +1,20 @@
-// Handler can resume multiple times (generator)
-handle {
-    send yield with 1
-    send yield with 2
-    send yield with 3
-} yield v {
-    print(v)
-    continue
+// Multi-resume: forking effect (resume is Clone)
+
+effect choose(): Bool
+
+fn choices() {
+    let a = choose()
+    let b = choose()
+    print("{a}, {b}")
 }
+
+// Fork handler - resumes multiple times
+handle choose(resume: Clone) {
+    resume(true)
+    resume(false)
+}
+choices()
+// Prints: true, true
+//         true, false
+//         false, true
+//         false, false

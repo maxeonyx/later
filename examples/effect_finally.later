@@ -1,18 +1,16 @@
-// Effect with cleanup that runs even on propagation
-let error = symbol()
-let mut cleanup-ran = false
+// Cleanup runs even when effect aborts
 
-let result = handle {
-    handle {
-        defer { cleanup-ran = true }
-        send error with "boom"
-    }
-} error e {
-    if cleanup-ran {
-        "cleanup ran\nerror: " + e
-    } else {
-        "cleanup did NOT run"
-    }
+effect fail(msg: String): Never
+
+fn work() {
+    defer { print("cleanup ran") }
+    fail("boom")
+    print("never reached")
 }
 
-result
+handle fail(msg, resume: Drop) {
+    print("caught: {msg}")
+}
+work()
+// Prints: cleanup ran
+//         caught: boom

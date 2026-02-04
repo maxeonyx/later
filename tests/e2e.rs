@@ -291,18 +291,18 @@ fn test_borrow_while_borrowed_error() {
 
 #[test]
 fn test_effect_send_handle() {
-    expect_output("effect_simple.later", "handled: 42");
+    expect_output("effect_simple.later", "Hello, World!");
 }
 
 #[test]
 fn test_effect_continue_with() {
-    expect_output("effect_continue.later", "resumed: 100");
+    expect_output("effect_continue.later", "100");
 }
 
 #[test]
 fn test_effect_propagates() {
     // Unhandled effects propagate up
-    expect_error("effect_unhandled.later", "unhandled effect: my-effect");
+    expect_error("effect_unhandled.later", "effect 'ask' is not handled");
 }
 
 #[test]
@@ -1645,7 +1645,7 @@ fn test_effect_shadowing() {
 #[test]
 fn test_effect_resume_multiple_times() {
     // Generator-style: handler can resume multiple times
-    expect_output("effect_multi_resume.later", "1\n2\n3");
+    expect_output("effect_multi_resume.later", "true, true\ntrue, false\nfalse, true\nfalse, false");
 }
 
 #[test]
@@ -2020,7 +2020,7 @@ fn test_effect_linear_cleanup_on_resume() {
 #[test]
 fn test_effect_linear_cleanup_on_abort() {
     // Handler that aborts: linear values must be cleaned up
-    expect_output("effect_linear_abort.later", "cleanup ran\naborted");
+    expect_output("effect_linear_abort.later", "cleanup ran\ncaught: reason");
 }
 
 // =============================================================================

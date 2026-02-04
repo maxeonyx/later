@@ -109,6 +109,7 @@ Still open:
 - Shallow vs deep handler default
 - Pipe partial application: `x | f(y)` means what exactly?
 - How do linear types appear in function signatures?
+- `with` / `require` syntax for context values (non-effect dependencies)
 
 ## Future Ideas
 

@@ -1,7 +1,13 @@
-// Error: linear value escapes through effect boundary
-handle {
+// Error: linear value cannot escape through effect boundary
+
+effect escape(value: File): ()
+
+fn work() {
     let file = open("test.txt")
-    send escape with file  // Error!
-} escape v {
+    escape(file)  // Error: linear value escapes!
+}
+
+handle escape(v) {
     v | close  // Handler can't receive linear value this way
 }
+work()

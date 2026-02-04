@@ -1,14 +1,21 @@
-// Handler aborts: linear values must be cleaned up
-let file = open("test.txt")
-defer { 
-    file | close
-    print("cleanup ran")
+// Handler aborts (doesn't resume): linear values must be cleaned up
+
+effect abort(reason: String): Never
+
+fn work() {
+    let file = open("test.txt")
+    defer { 
+        file | close
+        print("cleanup ran")
+    }
+    
+    abort("reason")
+    print("never reached")
 }
 
-handle {
-    send abort with "reason"
-    print("never reached")
-} abort reason {
-    print("aborted")
-    // Handler does NOT continue - must ensure cleanup runs
+// Handler with Drop resume - can choose not to resume
+handle abort(reason, resume: Drop) {
+    print("aborted: {reason}")
+    // Don't call resume - cleanup still runs via defer
 }
+work()

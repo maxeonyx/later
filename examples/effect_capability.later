@@ -1,10 +1,11 @@
 // Effect as capability - function must declare its effects
-fn do-io() performs IO {
-    print("io performed")
+
+effect log(msg: String): ()
+
+fn do-work() {  // implicitly has 'log' effect
+    log("work started")
+    log("work done")
 }
 
-handle {
-    do-io()
-} IO action {
-    action | perform
-}
+handle log(msg) { print("[LOG] {msg}") }
+do-work()

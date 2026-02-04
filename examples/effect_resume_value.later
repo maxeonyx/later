@@ -1,8 +1,14 @@
 // Handler provides value when resuming
-let result = handle {
-    let response = send ask with "question"
-    "got: {response}"
-} ask _ {
-    continue with "hello"
+
+effect ask(question: String): String
+
+fn converse() {
+    let answer = ask("what is your name?")
+    "Hello, {answer}!"
 }
-print(result)
+
+handle ask(q, resume) {
+    print("Q: {q}")
+    resume("World")
+}
+converse()

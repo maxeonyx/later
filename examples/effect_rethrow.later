@@ -1,20 +1,19 @@
 // Effect rethrow - catch and rethrow with modification
-let error = symbol()
+
+effect fail(msg: String): Never
 
 fn inner() {
-    send error with "inner error"
+    fail("inner error")
 }
 
 fn middle() {
-    handle {
-        inner()
-    } error e {
-        send error with "outer caught: " + e
+    handle fail(msg, resume: Drop) {
+        fail("wrapped: {msg}")  // rethrow to outer handler
     }
+    inner()
 }
 
-handle {
-    middle()
-} error e {
-    e
+handle fail(msg, resume: Drop) {
+    print("caught: {msg}")
 }
+middle()

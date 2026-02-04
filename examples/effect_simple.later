@@ -1,11 +1,10 @@
-// Simple effect: send and handle
+// Simple effect: declare, use, handle
 
-let my-effect = symbol()
+effect greet(): String
 
-let result = handle {
-    send my-effect with 42
-} my-effect value {
-    "handled: " + value | to-string
+fn say-hello() {
+    print(greet())
 }
 
-result
+handle greet() { "Hello, World!" }
+say-hello()

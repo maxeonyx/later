@@ -1,18 +1,16 @@
 // Shallow handler only handles the first occurrence
-let my-effect = symbol()
+
+effect emit(value: Int): ()
 
 fn work() {
-    send my-effect with 1
-    send my-effect with 2  // This propagates up
+    emit(1)  // handled by inner
+    emit(2)  // propagates to outer
 }
 
-handle shallow {
-    handle {
-        work()
-    } my-effect v {
-        print("handled once")
-        continue
-    }
-} my-effect v {
-    // Second occurrence handled here
+handle emit(v) { print("outer: {v}") }
+{
+    handle shallow emit(v) { print("inner: {v}") }
+    work()
 }
+// Prints: inner: 1
+//         outer: 2

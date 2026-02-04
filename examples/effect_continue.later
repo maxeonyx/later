@@ -1,12 +1,10 @@
-// Effect with continue: resume execution with a value
+// Effect with explicit resume
 
-let ask = symbol()
+effect ask(): Int
 
-let result = handle {
-    let answer = send ask
-    "resumed: " + answer | to-string
-} ask _ {
-    continue with 100
+fn add-twice() {
+    ask() + ask()
 }
 
-result
+handle ask(resume) { resume(50) }
+add-twice()

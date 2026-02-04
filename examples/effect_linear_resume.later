@@ -1,11 +1,13 @@
 // Handler resumes: linear values stay valid
-let file = open("test.txt")
 
-handle {
-    send log with "message"
+effect log(msg: String): ()
+
+fn work() {
+    let file = open("test.txt")
+    log("about to close")
     file | close
     print("file closed")
-} log msg {
-    print("log: {msg}")
-    continue
 }
+
+handle log(msg) { print("log: {msg}") }
+work()

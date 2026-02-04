@@ -1,12 +1,10 @@
 // Nested effect handlers - inner shadows outer
-let my-effect = symbol()
 
-handle {
-    handle {
-        send my-effect with "inner"
-    } my-effect v {
-        v + " handled"
-    }
-} my-effect v {
-    v + " outer"
+effect ask(): String
+
+handle ask() { "outer" }
+{
+    handle ask() { "inner" }
+    print(ask())  // prints "inner"
 }
+print(ask())  // prints "outer"

@@ -1,6 +1,9 @@
-// ERROR: Unhandled effect propagates and becomes an error
+// ERROR: Unhandled effect is a compile error
 
-let my-effect = symbol()
+effect ask(): Int
 
-send my-effect with "payload"
-// No handler! This should error.
+fn use-ask() {
+    ask()  // Error: effect 'ask' is not handled
+}
+
+use-ask()  // No handler provided!

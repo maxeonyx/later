@@ -1,10 +1,9 @@
 // Inner handler shadows outer handler
-handle {
-    handle {
-        send choice with "which?"
-    } choice _ {
-        continue with "inner"
-    }
-} choice _ {
-    continue with "outer"
+
+effect ask(): String
+
+handle ask() { "outer" }
+{
+    handle ask() { "inner" }
+    ask()  // returns "inner"
 }
