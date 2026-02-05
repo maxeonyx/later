@@ -1,9 +1,9 @@
-// Error: non-exhaustive pattern match
+# Error: non-exhaustive pattern match
 let value = { kind: "three", x: 3 }
 
-// Only handles kind "one" and "two"
+# Only handles kind "one" and "two"
 match value {
     { kind: "one", x } { x }
     { kind: "two", x } { x * 2 }
 }
-// No case for kind: "three"!
+# No case for kind: "three"!

@@ -1,4 +1,4 @@
-// Deeply nested data structure
+# Deeply nested data structure
 fn make-tree(depth) {
     if depth == 0 {
         { value: 0, children: [] }

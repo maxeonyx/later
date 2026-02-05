@@ -1,4 +1,4 @@
-// State effect pattern
+# State effect pattern
 
 effect get-state(): Int
 effect set-state(value: Int): ()

@@ -1,4 +1,4 @@
-// Cleanup runs even when effect aborts
+# Cleanup runs even when effect aborts
 
 effect fail(msg: String): Never
 
@@ -12,5 +12,5 @@ handle fail(msg, resume: Drop) {
     print("caught: {msg}")
 }
 work()
-// Prints: cleanup ran
-//         caught: boom
+# Prints: cleanup ran
+#         caught: boom

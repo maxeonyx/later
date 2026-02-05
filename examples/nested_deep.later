@@ -1,4 +1,4 @@
-// 100 nested blocks - should not overflow parser/interpreter stack
+# 100 nested blocks - should not overflow parser/interpreter stack
 fn nest(n) {
     if n == 0 {
         n

@@ -1,4 +1,4 @@
-// Types can implement the built-in drop symbol for auto-cleanup
+# Types can implement the built-in drop symbol for auto-cleanup
 type Resource = {
     name: String,
     [drop]: fn(self) {
@@ -7,4 +7,4 @@ type Resource = {
 }
 
 let r = Resource { name: "test" }
-// r goes out of scope, drop is called
+# r goes out of scope, drop is called

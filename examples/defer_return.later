@@ -1,7 +1,7 @@
-// Error: cannot return from defer block
+# Error: cannot return from defer block
 fn example() {
     defer {
-        return 42  // Error!
+        return 42  # Error!
     }
     "done"
 }

@@ -1,4 +1,4 @@
-// If with true condition
+# If with true condition
 if true {
     "yes"
 } else {

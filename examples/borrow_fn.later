@@ -1,4 +1,4 @@
-// Function can borrow and return (borrow from input)
+# Function can borrow and return (borrow from input)
 fn first(list) {
     &list[0]
 }

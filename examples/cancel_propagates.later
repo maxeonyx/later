@@ -1,4 +1,4 @@
-// Parent cancel propagates to all children
+# Parent cancel propagates to all children
 spawn {
     spawn {
         defer { print("child cancelled") }

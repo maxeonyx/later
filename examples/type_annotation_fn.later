@@ -1,4 +1,4 @@
-// Type annotation on function parameter
+# Type annotation on function parameter
 fn double(x: Int) {
     x * 2
 }

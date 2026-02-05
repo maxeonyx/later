@@ -1,4 +1,4 @@
-// Linear value must be consumed in both branches of if
+# Linear value must be consumed in both branches of if
 let file = open("test.txt")
 if true {
     file | close

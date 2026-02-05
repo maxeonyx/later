@@ -1,4 +1,4 @@
-// ERROR: Cannot reassign immutable variable
+# ERROR: Cannot reassign immutable variable
 let x = 10
-x = 20  // Error!
+x = 20  # Error!
 x

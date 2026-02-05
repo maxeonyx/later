@@ -1,3 +1,3 @@
-// ERROR: String index out of bounds
+# ERROR: String index out of bounds
 let s = "hello"
 s[10]

@@ -1,4 +1,4 @@
-// Pattern match on linear type - all branches must consume
+# Pattern match on linear type - all branches must consume
 let resource = open("data.txt")
 let result = read-result(resource)
 

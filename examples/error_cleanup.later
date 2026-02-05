@@ -1,4 +1,4 @@
-// Error propagates but cleanup still runs
+# Error propagates but cleanup still runs
 fn work() {
     defer { print("cleanup ran") }
     panic("oops")

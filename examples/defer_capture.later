@@ -1,5 +1,5 @@
-// Defer captures value at defer time
+# Defer captures value at defer time
 let mut x = 1
 defer { print(x) }
 x = 2
-// Should print 1, not 2
+# Should print 1, not 2

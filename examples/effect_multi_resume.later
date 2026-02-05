@@ -1,4 +1,4 @@
-// Multi-resume: forking effect (resume is Clone)
+# Multi-resume: forking effect (resume is Clone)
 
 effect choose(): Bool
 
@@ -8,13 +8,13 @@ fn choices() {
     print("{a}, {b}")
 }
 
-// Fork handler - resumes multiple times
+# Fork handler - resumes multiple times
 handle choose(resume: Clone) {
     resume(true)
     resume(false)
 }
 choices()
-// Prints: true, true
-//         true, false
-//         false, true
-//         false, false
+# Prints: true, true
+#         true, false
+#         false, true
+#         false, false

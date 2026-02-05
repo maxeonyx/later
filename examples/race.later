@@ -1,4 +1,4 @@
-// Race combinator: first to complete wins, others cancelled
+# Race combinator: first to complete wins, others cancelled
 
 let tasks = [
     spawn { 

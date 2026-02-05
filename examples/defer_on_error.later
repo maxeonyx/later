@@ -1,4 +1,4 @@
-// Defer runs even on error
+# Defer runs even on error
 let error = symbol()
 
 fn example() {

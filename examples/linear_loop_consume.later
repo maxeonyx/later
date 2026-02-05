@@ -1,7 +1,7 @@
-// Error: can't consume a linear value in a loop
-// (loop might run 0 times or N times)
+# Error: can't consume a linear value in a loop
+# (loop might run 0 times or N times)
 let file = open("test.txt")
 loop {
-    file | close  // Error: cannot consume here
+    file | close  # Error: cannot consume here
     break
 }

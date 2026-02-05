@@ -1,4 +1,4 @@
-// Mutual recursion - is-even and is-odd
+# Mutual recursion - is-even and is-odd
 fn is-even(n) {
     if n == 0 {
         true

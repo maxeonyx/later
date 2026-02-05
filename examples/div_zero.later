@@ -1,2 +1,2 @@
-// ERROR: Division by zero
+# ERROR: Division by zero
 10 / 0

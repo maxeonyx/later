@@ -1,4 +1,4 @@
-// Linear values in a list - all must be consumed
+# Linear values in a list - all must be consumed
 let files = [
     open("a.txt"),
     open("b.txt"),

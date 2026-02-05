@@ -1,4 +1,4 @@
-// Module that exports a value
+# Module that exports a value
 {
     value: 10,
     double: fn(x) x * 2,

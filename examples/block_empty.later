@@ -1,2 +1,2 @@
-// Empty block evaluates to nil
+# Empty block evaluates to nil
 {}

@@ -1,4 +1,4 @@
-// Linear value created in loop must be consumed each iteration
+# Linear value created in loop must be consumed each iteration
 let mut count = 0
 let mut i = 0
 loop {

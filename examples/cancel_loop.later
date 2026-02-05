@@ -1,4 +1,4 @@
-// Cancellation in a loop with cleanup
+# Cancellation in a loop with cleanup
 let mut result = []
 
 spawn {

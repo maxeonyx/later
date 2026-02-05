@@ -1,4 +1,4 @@
-// Spawn 100 concurrent tasks
+# Spawn 100 concurrent tasks
 let mut completed = 0
 let lock = mutex()
 

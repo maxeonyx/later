@@ -1,4 +1,4 @@
-// Cleanup runs in reverse order even under cancellation
+# Cleanup runs in reverse order even under cancellation
 spawn {
     defer { print("a") }
     defer { print("b") }

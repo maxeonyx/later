@@ -1,4 +1,4 @@
-// List spread
+# List spread
 let first = [1, 2]
 let last = [4, 5]
 [...first, 3, ...last]

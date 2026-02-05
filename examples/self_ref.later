@@ -1,2 +1,2 @@
-// Self-referential value during initialization
-let x = x + 1  // Error: can't reference x during its own init
+# Self-referential value during initialization
+let x = x + 1  # Error: can't reference x during its own init

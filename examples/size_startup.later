@@ -1,4 +1,4 @@
-// Size determined at startup from config
+# Size determined at startup from config
 @startup
 let config = read-config("app.toml")
 

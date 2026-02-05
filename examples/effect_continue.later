@@ -1,4 +1,4 @@
-// Effect with explicit resume
+# Effect with explicit resume
 
 effect ask(): Int
 

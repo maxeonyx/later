@@ -1,4 +1,4 @@
-// Handler provides value when resuming
+# Handler provides value when resuming
 
 effect ask(question: String): String
 

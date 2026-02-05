@@ -1,4 +1,4 @@
-// Cancellation is an effect that can be caught
+# Cancellation is an effect that can be caught
 spawn {
     handle {
         loop {

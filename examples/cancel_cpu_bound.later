@@ -1,8 +1,8 @@
-// CPU-bound loops check cancellation at loop head
+# CPU-bound loops check cancellation at loop head
 spawn {
     let mut i = 0
     loop {
-        // Cancellation check happens here
+        # Cancellation check happens here
         i = i + 1
         if i > 1000000 {
             break

@@ -1,4 +1,4 @@
-// Panic should still run cleanup for linear values
+# Panic should still run cleanup for linear values
 fn may_panic() {
     let file = open("test.txt")
     defer { 

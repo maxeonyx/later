@@ -1,7 +1,7 @@
-// Function with no return value returns nil
+# Function with no return value returns nil
 fn do-nothing() {
     let x = 1
     let y = 2
-    // no return
+    # no return
 }
 do-nothing()

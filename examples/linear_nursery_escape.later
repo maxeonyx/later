@@ -1,9 +1,9 @@
-// Linear values can't escape nursery scope
+# Linear values can't escape nursery scope
 let result = nursery {
     let file = open("test.txt")
     spawn {
         sleep(10)
     }
-    file  // Error: file escapes nursery but tasks might still reference it
+    file  # Error: file escapes nursery but tasks might still reference it
 }
 result | close

@@ -1,5 +1,5 @@
-// Can't read while mutably borrowed
+# Can't read while mutably borrowed
 let mut x = 42
 let ref = &mut x
-print(x)  // Error: x is mutably borrowed
+print(x)  # Error: x is mutably borrowed
 ref = 43

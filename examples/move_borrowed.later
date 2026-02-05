@@ -1,4 +1,4 @@
-// Can't move while borrowed
+# Can't move while borrowed
 let file = open("test.txt")
 let ref = &file
-let file2 = file  // Error: file is borrowed
+let file2 = file  # Error: file is borrowed

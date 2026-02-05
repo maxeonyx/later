@@ -1,4 +1,4 @@
-// Cleanup can fail
+# Cleanup can fail
 
 let resource = open-resource()
 

@@ -1,4 +1,4 @@
-// Startup can use linear types
+# Startup can use linear types
 @startup {
     let file = open("config.txt")
     defer { 

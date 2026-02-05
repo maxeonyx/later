@@ -1,4 +1,4 @@
-// Cyclic import
-// This file imports cyclic_import_b.later which imports this file
+# Cyclic import
+# This file imports cyclic_import_b.later which imports this file
 import "./cyclic_import_b.later" as b
 b.value

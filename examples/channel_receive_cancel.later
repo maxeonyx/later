@@ -1,8 +1,8 @@
-// Blocking receive respects cancellation
+# Blocking receive respects cancellation
 spawn {
     let (tx, rx) = channel()
-    // Never send anything
-    rx | receive  // Blocks forever
+    # Never send anything
+    rx | receive  # Blocks forever
 } as task
 
 sleep(1)

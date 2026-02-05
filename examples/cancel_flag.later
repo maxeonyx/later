@@ -1,14 +1,14 @@
-// Demonstrates cancellation flag checks in loops
+# Demonstrates cancellation flag checks in loops
 let mut iterations = 0
 
 spawn {
     loop {
         iterations = iterations + 1
-        // Cancellation point is checked here automatically
+        # Cancellation point is checked here automatically
     }
 } as task
 
-sleep(1)  // Let it run briefly
+sleep(1)  # Let it run briefly
 task | cancel
 task | await-cancelled
 

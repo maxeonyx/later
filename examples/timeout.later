@@ -1,4 +1,4 @@
-// Timeout as structured concurrency
+# Timeout as structured concurrency
 let result = [
     spawn {
         sleep(1000)

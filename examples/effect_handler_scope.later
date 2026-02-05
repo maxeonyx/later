@@ -1,14 +1,14 @@
-// Handler is only active within its scope
+# Handler is only active within its scope
 
 effect ask(): String
 
 fn inner() {
-    ask()  // Error: no handler in scope
+    ask()  # Error: no handler in scope
 }
 
 {
     handle ask() { "answer" }
-    // handler only active in this block
+    # handler only active in this block
 }
 
-inner()  // ask effect not handled - compile error
+inner()  # ask effect not handled - compile error

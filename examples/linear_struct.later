@@ -1,4 +1,4 @@
-// Linear values in a struct - all must be consumed
+# Linear values in a struct - all must be consumed
 let resources = {
     a: open("a.txt"),
     b: open("b.txt"),

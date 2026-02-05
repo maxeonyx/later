@@ -1,4 +1,4 @@
-// OK: Linear value consumed in both branches
+# OK: Linear value consumed in both branches
 
 let file = open("data.txt")
 if some-condition() {

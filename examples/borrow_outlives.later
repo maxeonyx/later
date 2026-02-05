@@ -1,6 +1,6 @@
-// Borrow cannot outlive borrowed value
+# Borrow cannot outlive borrowed value
 fn get-ref() {
     let x = 42
-    &x  // Error: x goes out of scope
+    &x  # Error: x goes out of scope
 }
 let ref = get-ref()

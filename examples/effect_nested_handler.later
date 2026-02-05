@@ -1,10 +1,10 @@
-// Nested effect handlers - inner shadows outer
+# Nested effect handlers - inner shadows outer
 
 effect ask(): String
 
 handle ask() { "outer" }
 {
     handle ask() { "inner" }
-    print(ask())  // prints "inner"
+    print(ask())  # prints "inner"
 }
-print(ask())  // prints "outer"
+print(ask())  # prints "outer"

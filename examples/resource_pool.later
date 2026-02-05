@@ -1,4 +1,4 @@
-// Resource pool pattern
+# Resource pool pattern
 let pool = create-pool(fn() {
     open-connection()
 }, 10)

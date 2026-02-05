@@ -1,2 +1,2 @@
-// String concatenation
+# String concatenation
 "hello" + " " + "world"

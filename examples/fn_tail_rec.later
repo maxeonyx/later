@@ -1,4 +1,4 @@
-// Tail recursion should not overflow stack
+# Tail recursion should not overflow stack
 fn count(n, acc) {
     if n == 0 {
         acc

@@ -1,9 +1,9 @@
-// Inner handler shadows outer handler
+# Inner handler shadows outer handler
 
 effect ask(): String
 
 handle ask() { "outer" }
 {
     handle ask() { "inner" }
-    ask()  // returns "inner"
+    ask()  # returns "inner"
 }

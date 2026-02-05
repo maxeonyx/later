@@ -1,2 +1,2 @@
-// String length
+# String length
 "hello" | len

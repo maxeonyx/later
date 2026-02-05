@@ -1,4 +1,4 @@
-// Rest parameters
+# Rest parameters
 fn tail(first, ...rest) {
     rest
 }

@@ -1,4 +1,4 @@
-// Explicit drop for linear values you can't use
+# Explicit drop for linear values you can't use
 let f = open("data.txt")
-drop(f)  // Explicitly consume without using
+drop(f)  # Explicitly consume without using
 "dropped"

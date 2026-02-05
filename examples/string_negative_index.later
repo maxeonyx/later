@@ -1,2 +1,2 @@
-// Negative string index
+# Negative string index
 "hello"[-1]

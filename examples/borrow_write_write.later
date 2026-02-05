@@ -1,4 +1,4 @@
-// Can't have two mutable borrows
+# Can't have two mutable borrows
 let mut x = 42
 let ref1 = &mut x
-let ref2 = &mut x  // Error
+let ref2 = &mut x  # Error

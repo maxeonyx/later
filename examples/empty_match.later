@@ -1,4 +1,4 @@
-// Match with no arms
+# Match with no arms
 let x = 42
 match x {
 }

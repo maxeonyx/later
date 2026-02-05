@@ -1,7 +1,7 @@
-// ERROR: Pattern match with unconsumed branch
+# ERROR: Pattern match with unconsumed branch
 let resource = open("data.txt")
 
 if true {
     resource | close
 }
-// Error: resource not consumed in else branch (implicit)
+# Error: resource not consumed in else branch (implicit)

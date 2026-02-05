@@ -1,5 +1,5 @@
-// Can't write while borrowed for reading
+# Can't write while borrowed for reading
 let mut x = 42
 let ref = &x
-x = 43  // Error: x is borrowed
+x = 43  # Error: x is borrowed
 print(ref)

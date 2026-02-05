@@ -1,4 +1,4 @@
-// Default parameter values
+# Default parameter values
 fn greet(x = 42) {
     x
 }

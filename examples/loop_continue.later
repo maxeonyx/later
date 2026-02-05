@@ -1,4 +1,4 @@
-// Loop with continue (skip even numbers)
+# Loop with continue (skip even numbers)
 let mut result = []
 let mut i = 0
 loop {

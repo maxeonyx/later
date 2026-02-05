@@ -1,4 +1,4 @@
-// Defer in loop runs each iteration
+# Defer in loop runs each iteration
 let mut i = 0
 loop {
     defer { print(i) }

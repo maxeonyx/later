@@ -1,4 +1,4 @@
-// One child error cancels all siblings
+# One child error cancels all siblings
 nursery {
     spawn {
         defer { print("sibling cancelled") }

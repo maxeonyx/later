@@ -1,2 +1,2 @@
-// ERROR: Pattern list length mismatch
+# ERROR: Pattern list length mismatch
 let [a, b, c] = [1, 2]

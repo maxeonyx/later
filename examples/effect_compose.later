@@ -1,4 +1,4 @@
-// Multiple effects compose
+# Multiple effects compose
 
 effect yield(value: Int): ()
 effect log(msg: String): ()

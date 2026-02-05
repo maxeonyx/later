@@ -1,6 +1,6 @@
-// Move in condition creates uncertainty
+# Move in condition creates uncertainty
 let file = open("test.txt")
 if condition {
-    file | close  // moved here
+    file | close  # moved here
 }
-file | close  // Error: file may have been moved
+file | close  # Error: file may have been moved

@@ -1,8 +1,8 @@
-// Effect as capability - function must declare its effects
+# Effect as capability - function must declare its effects
 
 effect log(msg: String): ()
 
-fn do-work() {  // implicitly has 'log' effect
+fn do-work() {  # implicitly has 'log' effect
     log("work started")
     log("work done")
 }

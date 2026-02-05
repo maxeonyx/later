@@ -1,7 +1,7 @@
-// ERROR: Partial consumption of struct with linear values
+# ERROR: Partial consumption of struct with linear values
 let resources = {
     a: open("a.txt"),
     b: open("b.txt"),
 }
 resources.a | close
-// resources.b is never consumed!
+# resources.b is never consumed!

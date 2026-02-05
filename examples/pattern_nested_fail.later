@@ -1,2 +1,2 @@
-// ERROR: Nested pattern match fails
+# ERROR: Nested pattern match fails
 let { data: [a, b] } = { data: "not a list" }

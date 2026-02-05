@@ -1,4 +1,4 @@
-// Generator using yield effect
+# Generator using yield effect
 
 fn range(n) {
     let mut i = 0
@@ -11,5 +11,5 @@ fn range(n) {
     }
 }
 
-// Collect generator into a list
+# Collect generator into a list
 range(5) | collect

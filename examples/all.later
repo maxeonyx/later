@@ -1,4 +1,4 @@
-// All combinator: wait for all tasks
+# All combinator: wait for all tasks
 
 let tasks = [
     spawn { 1 },

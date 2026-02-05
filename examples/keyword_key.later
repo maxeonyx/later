@@ -1,4 +1,4 @@
-// Keywords as object keys
+# Keywords as object keys
 let obj = {
     if: 1,
     let: 2,

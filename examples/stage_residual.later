@@ -1,9 +1,9 @@
-// Comptime produces a residual program with computed values
+# Comptime produces a residual program with computed values
 fn factorial(n) {
     if n <= 1 { 1 }
     else { n * factorial(n - 1) }
 }
 
-// This is computed at compile time
-// The residual program just contains the literal 120
+# This is computed at compile time
+# The residual program just contains the literal 120
 @comptime factorial(5)

@@ -1,3 +1,3 @@
-// ERROR: Wrong number of arguments
+# ERROR: Wrong number of arguments
 fn add(a, b) a + b
 add(1, 2, 3)

@@ -1,4 +1,4 @@
-// Or patterns
+# Or patterns
 let x = 2
 
 match x {

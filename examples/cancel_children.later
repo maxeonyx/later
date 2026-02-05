@@ -1,4 +1,4 @@
-// Cancellation propagates to child tasks
+# Cancellation propagates to child tasks
 
 let log = mut []
 

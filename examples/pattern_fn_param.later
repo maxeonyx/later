@@ -1,4 +1,4 @@
-// Destructuring in function parameters
+# Destructuring in function parameters
 fn sum-point({ x, y, z }) {
     x + y + z
 }

@@ -1,3 +1,3 @@
-// Integer underflow - should be a runtime error
-let min = -9223372036854775808  // i64 min
+# Integer underflow - should be a runtime error
+let min = -9223372036854775808  # i64 min
 min - 1

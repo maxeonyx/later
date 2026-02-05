@@ -1,2 +1,2 @@
-// Pipe into anonymous function
+# Pipe into anonymous function
 10 | fn(x) { x * x }

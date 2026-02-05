@@ -1,4 +1,4 @@
-// Nested cleanup runs in reverse order
+# Nested cleanup runs in reverse order
 
 let log = mut []
 

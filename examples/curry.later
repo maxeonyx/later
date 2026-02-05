@@ -1,4 +1,4 @@
-// Currying
+# Currying
 fn curry-add(a) {
     fn(b) {
         fn(c) {

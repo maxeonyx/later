@@ -1,4 +1,4 @@
-// Linear values can be safely transferred via channels
+# Linear values can be safely transferred via channels
 let (tx, rx) = channel()
 
 spawn {

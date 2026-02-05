@@ -1,4 +1,4 @@
-// Named arguments
+# Named arguments
 fn add(x, y) {
     x + y
 }

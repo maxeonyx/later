@@ -1,5 +1,5 @@
-// Kebab-case vs subtraction
-// `a-b` is one identifier, `a - b` (with spaces) is subtraction
+# Kebab-case vs subtraction
+# `a-b` is one identifier, `a - b` (with spaces) is subtraction
 let a = 5
 let b = 2
 a - b

@@ -1,4 +1,4 @@
-// Handler resumes: linear values stay valid
+# Handler resumes: linear values stay valid
 
 effect log(msg: String): ()
 

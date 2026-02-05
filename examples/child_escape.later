@@ -1,8 +1,8 @@
-// ERROR: Child task cannot escape parent scope
+# ERROR: Child task cannot escape parent scope
 fn bad() {
     spawn {
         loop { }
-    }  // Returns task handle - but task would outlive function!
+    }  # Returns task handle - but task would outlive function!
 }
 
-bad()  // Error: task cannot outlive its parent scope
+bad()  # Error: task cannot outlive its parent scope

@@ -1,4 +1,4 @@
-// Nested defer blocks execute inner first
+# Nested defer blocks execute inner first
 {
     defer { print("outer") }
     {

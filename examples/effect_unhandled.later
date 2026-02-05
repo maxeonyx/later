@@ -1,9 +1,9 @@
-// ERROR: Unhandled effect is a compile error
+# ERROR: Unhandled effect is a compile error
 
 effect ask(): Int
 
 fn use-ask() {
-    ask()  // Error: effect 'ask' is not handled
+    ask()  # Error: effect 'ask' is not handled
 }
 
-use-ask()  // No handler provided!
+use-ask()  # No handler provided!

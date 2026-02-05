@@ -1,10 +1,10 @@
-// During cleanup, cancellation is blocked
+# During cleanup, cancellation is blocked
 let mut log = []
 
 spawn {
     defer {
-        // This cleanup cannot be cancelled
-        sleep(100)  // Slow cleanup
+        # This cleanup cannot be cancelled
+        sleep(100)  # Slow cleanup
         log = [...log, "cleanup completed fully"]
     }
     sleep(1000)

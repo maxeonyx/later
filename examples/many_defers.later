@@ -1,8 +1,8 @@
-// 100 defers in sequence
+# 100 defers in sequence
 fn setup-defers(n) {
     if n > 0 {
         defer { 
-            // Each defer contributes to count
+            # Each defer contributes to count
         }
         setup-defers(n - 1)
     }

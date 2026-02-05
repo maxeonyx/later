@@ -1,4 +1,4 @@
-// Recursive factorial
+# Recursive factorial
 fn factorial(n) {
     if n <= 1 {
         1

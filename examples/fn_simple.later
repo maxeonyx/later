@@ -1,4 +1,4 @@
-// Simple function definition and call
+# Simple function definition and call
 fn add-two(x) {
     x + 2
 }

@@ -1,4 +1,4 @@
-// Each symbol() call creates a unique symbol
+# Each symbol() call creates a unique symbol
 let a = symbol()
 let b = symbol()
 a == b

@@ -1,4 +1,4 @@
-// Cleanup with retry
+# Cleanup with retry
 
 let log = mut []
 let attempts = mut 0

@@ -1,8 +1,8 @@
-// Double cancel is a no-op
+# Double cancel is a no-op
 spawn {
     sleep(1000)
 } as task
 
 task | cancel
-task | cancel  // No error, just a no-op
+task | cancel  # No error, just a no-op
 print("ok")

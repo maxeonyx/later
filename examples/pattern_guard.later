@@ -1,4 +1,4 @@
-// Pattern with guard clause
+# Pattern with guard clause
 let x = 5
 
 match x {

@@ -1,6 +1,6 @@
-// ERROR: Cannot capture linear value in closure
+# ERROR: Cannot capture linear value in closure
 let file = open("data.txt")
 let bad-closure = fn() {
-    file | read  // Error: can't capture linear value
+    file | read  # Error: can't capture linear value
 }
 bad-closure()

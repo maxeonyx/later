@@ -1,8 +1,8 @@
-// Size propagates through struct
-let point: Size(8) = { x: 0, y: 0 }  // 4 bytes each
+# Size propagates through struct
+let point: Size(8) = { x: 0, y: 0 }  # 4 bytes each
 let rect = {
     origin: point,
     extent: { x: 10, y: 10 },
 }
-// rect size = 2 * point size + padding = 24
+# rect size = 2 * point size + padding = 24
 "size: " + rect | size | to-string

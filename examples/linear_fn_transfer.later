@@ -1,4 +1,4 @@
-// Linear value passed to function - ownership transfers
+# Linear value passed to function - ownership transfers
 fn consume-file(file) {
     file | close
     "consumed in function"

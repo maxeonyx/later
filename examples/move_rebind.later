@@ -1,6 +1,6 @@
-// Moving then rebinding is OK
+# Moving then rebinding is OK
 let mut file = open("a.txt")
 file | close
-file = open("b.txt")  // rebind
+file = open("b.txt")  # rebind
 file | close
 42

@@ -1,4 +1,4 @@
-// Function returning function
+# Function returning function
 fn make-adder(n) {
     fn(x) x + n
 }

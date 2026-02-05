@@ -1,2 +1,2 @@
-// ERROR: Size overflow
-let buffer: [u8; MaxSize(100)] = make-buffer(200)  // Error: exceeds maximum size
+# ERROR: Size overflow
+let buffer: [u8; MaxSize(100)] = make-buffer(200)  # Error: exceeds maximum size

@@ -1,4 +1,4 @@
-// Parallel map
+# Parallel map
 fn parallel-map(list, f) {
     list 
         | map(fn(x) spawn { f(x) })

@@ -1,4 +1,4 @@
-// Deep handler handles all occurrences (default)
+# Deep handler handles all occurrences (default)
 
 effect emit(value: Int): ()
 
@@ -10,4 +10,4 @@ fn work() {
 
 handle emit(v) { print("handled: {v}") }
 work()
-// Prints: handled: 1, handled: 2, handled: 3
+# Prints: handled: 1, handled: 2, handled: 3

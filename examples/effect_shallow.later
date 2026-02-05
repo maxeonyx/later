@@ -1,10 +1,10 @@
-// Shallow handler only handles the first occurrence
+# Shallow handler only handles the first occurrence
 
 effect emit(value: Int): ()
 
 fn work() {
-    emit(1)  // handled by inner
-    emit(2)  // propagates to outer
+    emit(1)  # handled by inner
+    emit(2)  # propagates to outer
 }
 
 handle emit(v) { print("outer: {v}") }
@@ -12,5 +12,5 @@ handle emit(v) { print("outer: {v}") }
     handle shallow emit(v) { print("inner: {v}") }
     work()
 }
-// Prints: inner: 1
-//         outer: 2
+# Prints: inner: 1
+#         outer: 2

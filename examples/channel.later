@@ -1,4 +1,4 @@
-// Channel send and receive
+# Channel send and receive
 let ch = channel()
 
 spawn {

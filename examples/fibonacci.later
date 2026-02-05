@@ -1,4 +1,4 @@
-// Recursive fibonacci
+# Recursive fibonacci
 fn fib(n) {
     if n <= 1 {
         n

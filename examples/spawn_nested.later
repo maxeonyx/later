@@ -1,4 +1,4 @@
-// Nested spawn - child tasks complete before parent
+# Nested spawn - child tasks complete before parent
 let mut log = []
 
 spawn {

@@ -1,7 +1,7 @@
-// Error during cleanup - first error wins
+# Error during cleanup - first error wins
 fn work() {
     defer { 
-        panic("cleanup error")  // This is logged but doesn't replace original
+        panic("cleanup error")  # This is logged but doesn't replace original
     }
     panic("original error")
 }

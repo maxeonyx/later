@@ -1,2 +1,2 @@
-// Pipe to method syntax
+# Pipe to method syntax
 "hello" | .len()

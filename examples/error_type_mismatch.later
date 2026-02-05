@@ -1,2 +1,2 @@
-// ERROR: Type mismatch
+# ERROR: Type mismatch
 5 + "hello"

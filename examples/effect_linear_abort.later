@@ -1,4 +1,4 @@
-// Handler aborts (doesn't resume): linear values must be cleaned up
+# Handler aborts (doesn't resume): linear values must be cleaned up
 
 effect abort(reason: String): Never
 
@@ -13,9 +13,9 @@ fn work() {
     print("never reached")
 }
 
-// Handler with Drop resume - can choose not to resume
+# Handler with Drop resume - can choose not to resume
 handle abort(reason, resume: Drop) {
     print("aborted: {reason}")
-    // Don't call resume - cleanup still runs via defer
+    # Don't call resume - cleanup still runs via defer
 }
 work()

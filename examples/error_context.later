@@ -1,2 +1,2 @@
-// Error should show code context
+# Error should show code context
 let x = ???

@@ -1,4 +1,4 @@
-// Object shorthand: { x, y } means { x: x, y: y }
+# Object shorthand: { x, y } means { x: x, y: y }
 let x = 10
 let y = 20
 { x, y }

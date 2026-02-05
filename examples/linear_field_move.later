@@ -1,5 +1,5 @@
-// Error: can't move a field out of a linear struct
+# Error: can't move a field out of a linear struct
 let record = { file: open("test.txt") }
-let f = record.file  // This moves the field
-// record is now partially moved - what happens to it?
+let f = record.file  # This moves the field
+# record is now partially moved - what happens to it?
 f | close

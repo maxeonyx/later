@@ -1,4 +1,4 @@
-// Generic function instantiation
+# Generic function instantiation
 fn identity<T>(x: T) -> T {
     x
 }

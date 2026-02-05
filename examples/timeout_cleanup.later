@@ -1,4 +1,4 @@
-// Timeout with proper cleanup
+# Timeout with proper cleanup
 let resource = open-resource()
 
 let result = [

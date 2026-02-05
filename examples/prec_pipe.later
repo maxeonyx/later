@@ -1,5 +1,5 @@
-// Pipe has low precedence
+# Pipe has low precedence
 fn add5(x) x + 5
 
-// 10 | add5 binds tighter than arithmetic
+# 10 | add5 binds tighter than arithmetic
 10 | add5

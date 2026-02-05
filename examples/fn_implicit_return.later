@@ -1,4 +1,4 @@
-// Implicit return - last expression is returned
+# Implicit return - last expression is returned
 fn compute() {
     let x = 5
     let y = 5

@@ -1,4 +1,4 @@
-// Multiple read borrows are allowed
+# Multiple read borrows are allowed
 let x = 42
 let ref1 = &x
 let ref2 = &x

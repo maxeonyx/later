@@ -1,4 +1,4 @@
-// Multiple defers run in reverse order
+# Multiple defers run in reverse order
 fn example() {
     defer { print("1") }
     defer { print("2") }

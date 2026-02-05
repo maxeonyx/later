@@ -1,7 +1,7 @@
-// Simple task cancellation
+# Simple task cancellation
 spawn {
     loop {
-        // This will be cancelled
+        # This will be cancelled
     }
 } as task
 

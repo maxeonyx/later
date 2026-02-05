@@ -1,4 +1,4 @@
-// Multiple effect handlers
+# Multiple effect handlers
 
 effect get-a(): Int
 effect get-b(): Int

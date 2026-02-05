@@ -1,4 +1,4 @@
-// Simple effect: declare, use, handle
+# Simple effect: declare, use, handle
 
 effect greet(): String
 

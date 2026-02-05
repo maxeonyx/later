@@ -1,4 +1,4 @@
-// Spawned task owns linear resource and cleans it up
+# Spawned task owns linear resource and cleans it up
 let mut result = ""
 
 spawn {
@@ -7,7 +7,7 @@ spawn {
         resource | close
         result = "resource cleaned up"
     }
-    // do some work...
+    # do some work...
 } | await
 
 result

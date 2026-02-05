@@ -1,4 +1,4 @@
-// Retry with exponential backoff
+# Retry with exponential backoff
 fn retry-with-backoff(action, max-attempts) {
     let mut attempt = 1
     let mut delay = 10

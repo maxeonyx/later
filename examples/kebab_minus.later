@@ -1,5 +1,5 @@
-// Disambiguate kebab-case from subtraction
+# Disambiguate kebab-case from subtraction
 let a = 15
 let b = 5
-// Space before minus makes it subtraction
+# Space before minus makes it subtraction
 a - b

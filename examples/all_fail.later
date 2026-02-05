@@ -1,4 +1,4 @@
-// All with failure: one fails, others cancelled and cleaned up
+# All with failure: one fails, others cancelled and cleaned up
 
 let log = mut []
 

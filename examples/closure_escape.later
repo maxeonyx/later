@@ -1,9 +1,9 @@
-// Error: closure captures variable that goes out of scope
+# Error: closure captures variable that goes out of scope
 fn make_closure() {
     let x = 42
     fn inner() { x }
-    inner  // Returns closure that captures x
-}  // x goes out of scope here
+    inner  # Returns closure that captures x
+}  # x goes out of scope here
 
 let f = make_closure()
-f()  // Error: x no longer exists
+f()  # Error: x no longer exists

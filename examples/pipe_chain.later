@@ -1,4 +1,4 @@
-// Chained pipe operators
+# Chained pipe operators
 fn double(x) x * 2
 fn add-ten(x) x + 10
 5 | double | add-ten

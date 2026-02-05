@@ -1,8 +1,8 @@
-// Cancellation during cleanup is deferred
+# Cancellation during cleanup is deferred
 spawn {
     let file = open("test.txt")
     defer {
-        // Even if cancelled here, cleanup must complete
+        # Even if cancelled here, cleanup must complete
         sleep(10)
         file | close
         print("cleanup complete")

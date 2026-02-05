@@ -1,4 +1,4 @@
-// Function with many parameters
+# Function with many parameters
 fn sum10(a, b, c, d, e, f, g, h, i, j) {
     a + b + c + d + e + f + g + h + i + j
 }

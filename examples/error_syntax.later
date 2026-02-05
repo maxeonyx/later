@@ -1,2 +1,2 @@
-// ERROR: Syntax error - unexpected token
+# ERROR: Syntax error - unexpected token
 let x = + 5

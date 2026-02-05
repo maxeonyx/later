@@ -1,4 +1,4 @@
-// Function returns linear value - caller must consume
+# Function returns linear value - caller must consume
 fn get-resource() {
     open("data.txt")
 }
