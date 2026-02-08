@@ -4,118 +4,69 @@ Immediate tasks for the current/next agent.
 
 ## Current State
 
-**326 failing E2E tests** - Comprehensive specification complete.
+**332 failing E2E tests** — all fail with "later: not yet implemented"
 
-The test suite now captures the full language vision as described in VISION.md. All tests fail with "later: not yet implemented" which is the correct baseline failure.
+**Design review completed** — see `docs/DESIGN-REVIEW.md`
 
-## Spec Mode Complete - Ready for Build Mode
+## ACTIVE: Design Reconciliation (Spec Mode)
 
-The specification phase is essentially complete. The test suite covers:
+A comprehensive design review has been done. The review found:
 
-- Basic expressions and arithmetic
-- Booleans, comparisons, unary operators
-- Let bindings, mutability, shadowing
-- Functions (named, anonymous, closures, higher-order)
-- Objects and lists (literals, access, operations, spread)
-- Control flow (if/else, loop, while, break, continue)
-- Pattern matching (destructuring, spread, wildcard)
-- Strings (literals, escapes, interpolation, operations)
-- Pipe operator
-- Linear types (must-use, move, borrow, in aggregates)
-- Effects (send, handle, continue, generators, state)
-- Cancellation (core feature - flags, cleanup, blocking)
-- Structured concurrency (spawn, nursery, channels, race, all)
-- Fallible cleanup
-- Multistage (@comptime, @startup)
-- Memory/size tracking
-- Import/export
-- Error messages
-- Real-world patterns
+### Must-resolve contradictions:
+1. **`{}` ambiguity** — `empty_object.later` and `block_empty.later` are the same code with different expected outputs
+2. **Comment syntax** — PLAN.md says `//`, everything else says `#`. PLAN.md is wrong.
+3. **Linear struct field access** — `linear_struct.later` moves fields via `.`, but `linear_field_move.later` says moving fields is an error
+4. **Linear list indexing** — `linear_list.later` indexes to consume, but `linear_list_move.later` says indexing linear lists is an error
+5. **Effect invocation** — some examples use `send X with Y`, others call effects like functions. Pick one.
+6. **Handler syntax** — 6 different syntactic forms across examples. Needs consolidation.
+7. **Effect declaration** — VISION.md uses `resume(T)` syntax, examples use simpler `: T` style
 
-## Next Steps (Build Mode)
+### New features to design & spec (Max requested):
+8. **Allocation as an effect** — `alloc` effect for heap allocation, no-alloc code has no alloc effect
+9. **Static vs dynamic memory distinction** — known-size vs unknown-size, stack vs heap
+10. **Size taxonomy** — 2×2 matrix of known/unknown × static/dynamic
 
-Switch to build mode and implement:
+### Waiting on Max to review:
+- `docs/DESIGN-REVIEW.md` — full analysis with resolution proposals
+- Max needs to make decisions on contradictions before tests can be fixed
+- After decisions, update VISION.md, fix conflicting examples/tests, add allocation tests
 
-### Phase 1: Lexer
-Make these tests pass first:
-- `test_empty_file` - Handle empty input
-- `test_integer_literal` - Tokenize integers
-- `test_boolean_true/false` - Tokenize keywords
+## Handover Notes
 
-### Phase 2: Parser  
-- Parse literals into AST
-- Parse binary expressions
-- Parse let bindings
+### What was done this session:
+- Read ALL 332 example files, all tests, VISION.md, PLAN.md, TODO.md
+- Identified 7 contradictions between VISION.md, PLAN.md, and examples
+- Analyzed allocation-as-effect design (Max's new wishlist item)
+- Wrote comprehensive design review in `docs/DESIGN-REVIEW.md`
+- Did NOT modify any tests or application code yet (waiting for Max's decisions)
 
-### Phase 3: Interpreter
-- Evaluate integer literals
-- Evaluate arithmetic
-- Evaluate comparisons
-- Evaluate if/else
-- Evaluate let bindings
+### What the next agent should do:
+1. Read `docs/DESIGN-REVIEW.md` first
+2. Ask Max which resolutions he wants for each contradiction
+3. Update VISION.md with resolved decisions
+4. Fix conflicting examples and tests
+5. Write new tests for allocation-as-effect
+6. Continue in spec mode until design is clean
 
-### Phase 4: Functions
-- Parse function definitions
-- Parse function calls
-- Implement closures
+### Key files:
+- `docs/DESIGN-REVIEW.md` — THE design reconciliation analysis
+- `docs/VISION.md` — language design (needs updating after review)
+- `docs/PLAN.md` — implementation roadmap (has some stale decisions)
+- `tests/e2e.rs` — 332 E2E tests (2314 lines)
+- `examples/*.later` — 332 example programs (test inputs)
+- `src/main.rs` — stub (22 lines, just reads file and exits)
 
-### Phase 5: Linear Types
-- Track value consumption
-- Error on unused values
-- Error on double use
+## Optional: More Spec Tests (lower priority)
 
-## Optional: More Spec Tests
-
-If continuing in spec mode, consider:
+If continuing in spec mode after design reconciliation:
+- [ ] Allocation effect tests (no-alloc functions, arena handlers)
+- [ ] Size tracking tests (stack vs heap, known vs unknown)
 - [ ] Floats with exponents (1e10, 3.14e-5)
 - [ ] Hex/binary/octal literals
 - [ ] Raw strings (r"...")
 - [ ] Multi-line strings (""")
 - [ ] Range syntax (1..10, 1..=10)
-- [ ] Match expressions
-- [ ] Guard clauses in patterns
-- [ ] Type aliases
-- [ ] Generic types
-- [ ] Traits/interfaces
-
-## Architecture Notes
-
-Suggested module layout for build mode:
-
-```rust
-// src/lib.rs
-pub mod lexer;   // Token, Lexer
-pub mod ast;     // Expr, Stmt, Pattern
-pub mod parser;  // Parser
-pub mod types;   // Type, LinearState
-pub mod interp;  // Interpreter, Value
-pub mod effects; // Effect, Handler
-pub mod tasks;   // Task, Nursery
-pub mod stages;  // Stage, Residual
-```
-
-## Open Design Questions
-
-Resolved in examples:
-- Comments: `//` line comments
-- Booleans: `true`, `false`, `and`, `or`, `not`
-- Cleanup: `defer { }` blocks
-- Pipe: `x | f` calls `f(x)`
-- Precedence: left-to-right, no BODMAS (use `()` to group)
-- Linear types: all values must be consumed; `drop` symbol for auto-cleanup
-
-Still open:
-- Exact defer capture semantics (by value or by reference?)
-- Shallow vs deep handler default
-- Pipe partial application: `x | f(y)` means what exactly?
-- How do linear types appear in function signatures?
-- `with` / `require` syntax for context values (non-effect dependencies)
-
-## Future Ideas
-
-- [ ] Debug warning for symbols with same name from same module
-- [ ] `symbol("name")` syntax for debug-friendly symbols
 
 ## Blocked
 
-(Nothing currently blocked)
+- Everything blocked on Max reviewing `docs/DESIGN-REVIEW.md` and making design decisions
