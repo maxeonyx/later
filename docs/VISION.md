@@ -338,42 +338,90 @@ When an error occurs during cleanup:
 
 ### 9. Memory Allocation as an Effect
 
-Memory allocation is an effect. Code that doesn't allocate doesn't have the `alloc` effect — the type system tracks this.
+Memory allocation is an effect. The `alloc` effect takes a size and resumes with a pointer. Code that doesn't allocate doesn't have the `alloc` effect — the type system tracks this.
 
 ```later
-# Pure computation — no alloc effect
+# No alloc effect — pure computation on known-size values
 fn add(b) { + b }
 
-# Stack allocation of known-size values — no alloc effect needed
+# No alloc effect — struct is known-size
 fn make-point(x, y) { { x, y } }
 
-# Heap allocation — requires alloc effect
-fn make-list(items) {
-    items to-list  # needs alloc
+# Requires alloc — growable list
+fn collect(n) {
+    let mut xs = []
+    let mut i = 0
+    loop {
+        if i >= n { break }
+        xs = xs append(i)
+        i = i + 1
+    }
+    xs
 }
 ```
 
-#### Size Taxonomy
+#### Alloc Hierarchy: Sizes and Stages
 
-Four categories, forming a 2×2 matrix:
+The alloc effect isn't a single thing — it's a hierarchy based on **when sizes become known.** Each compilation stage resolves some sizes, potentially eliminating the alloc effect.
 
-|                  | Known size          | Unknown size         |
-|------------------|--------------------|-----------------------|
-| **Static alloc** | Stack / inline     | Bounded (MaxSize)     |
-| **Dynamic alloc**| Fixed heap alloc   | Growable (Vec-like)   |
+| Level | Sizes known at | Alloc effect | Example |
+|-------|---------------|--------------|---------|
+| **Comptime-static** | Compile time | None | `{ x: Int, y: Int }`, fixed arrays |
+| **Startup-static** | After config | Resolved at startup | Connection pool sized by config |
+| **Runtime-bounded** | Per event | Resolved per-request | Buffer sized by request body |
+| **Unbounded** | Never fully known | Full dynamic alloc | Growable lists, arbitrary recursion |
 
-- **Known + Static**: `[u8; 64]` — size known at compile time, stack allocated
-- **Known + Dynamic**: Size known but too large for stack — heap allocated, fixed
-- **Unknown + Bounded**: `List(MaxSize(100))` — max size known, can pre-allocate
-- **Unknown + Dynamic**: Growable containers — requires `alloc` effect
+**Key insight: "static" is relative to a stage.** After startup ingests config, those sizes *are* static for the runtime stage. After a request arrives, handler memory *is* static for that request's lifetime. Each stage can compute the total memory needed for the next.
 
-Stack allocation of known-size values doesn't require the alloc effect. Only heap/dynamic allocation does. The compiler needs to know sizes at compile time to determine whether alloc is needed.
+**Recursion requires dynamic alloc.** Each recursive call is a dynamic stack frame allocation. A non-recursive program's stack is statically sized. This means recursion itself carries the alloc effect.
 
-#### Interaction with Stages
+```later
+# Comptime-static — all sizes from source code, no alloc
+fn make-point(x: Int, y: Int) { { x, y } }
 
-- **Comptime**: No alloc (or special comptime allocator)
-- **Startup**: Alloc allowed. Sizes may come from config. Memory can be pre-allocated.
-- **Runtime**: Full alloc. This is where the `alloc` effect matters most.
+# Startup-static — size depends on config, allocated once at startup
+@startup
+fn make-connection-pool(config) {
+    Array(config.max-connections, { as i; Connection(i) })
+}
+
+# Runtime-bounded — size depends on runtime input, bounded per-request
+fn handle-request(req) {
+    let buf = Buffer(req.body-size)
+    req read-body(buf) await
+    buf parse-json
+}
+
+# Unbounded — truly dynamic, growable
+fn accumulate-forever(stream) {
+    let mut results = []
+    loop {
+        let item = stream next await ?
+        results = results append(item)
+    }
+}
+```
+
+#### Alloc Handlers
+
+The alloc effect can be handled to provide custom allocators. Handlers at each stage resolve allocation for the stage below:
+
+```later
+fn process-batch(items) {
+    let arena = Arena(1024)
+    with alloc(size) {
+        resume(arena bump(size))
+    }
+    items map({ as item; item transform })
+    # arena freed when scope exits
+}
+```
+
+**Alloc handlers should be elided** — compiled into regular function calls or inlined. The effect system is the type-level tracking; at runtime, allocation is just a function call.
+
+#### A Fully Static Program
+
+A program with no dynamic alloc effect compiles to a **single up-front allocation**. No stack growth, no heap. Like an embedded system or a shader. This is the ultimate goal of the size tracking system — if you can prove all sizes are static, the program's entire memory footprint is known at compile time.
 
 ### 10. Composable Cleanup
 
@@ -383,22 +431,29 @@ Cleanup behavior emerges from how primitives compose:
 - **Collection**: collection cleanup cleans up all elements
 - **Task**: task cleanup includes all owned resources
 
-### 11. Upward-Propagating Memory Information
+### 11. Upward-Propagating Size Information
 
-Types can carry information about their memory footprint. This propagates upward through composition, enabling:
-- Compile-time memory allocation when sizes are static
-- Startup-time allocation when sizes depend on config
+Types carry information about their memory footprint. This propagates upward through composition:
+- Structs: size = sum of field sizes (if all fields are statically sized, struct is too)
+- Collections: size = element size × count (if both are static, collection is too)
+- Functions: frame size = sum of local sizes (if no recursion and all locals static, frame is too)
+
+This enables:
+- Comptime allocation when all sizes are static
+- Startup allocation when sizes depend on config
 - Runtime allocation as a fallback
 
 ### 12. Multistage Programming
 
 Building is running. The program executes in stages:
 
-1. **Build time**: produces a residual program
-2. **Startup time**: ingests config, specializes further
-3. **Runtime**: actual execution
+1. **Build time**: produces a residual program. Sizes known from source → comptime-static allocation.
+2. **Startup time**: ingests config, specializes further. Sizes from config → startup-static allocation.
+3. **Runtime**: actual execution. Per-event sizes → runtime allocation.
 
-Like Zig's comptime, but with arbitrary stages.
+Like Zig's comptime, but with arbitrary stages. **Each stage is a chance to resolve sizes and eliminate alloc effects** for the code that runs in later stages.
+
+Pipeline arg = runtime data, explicit params can be lifted to earlier stages. This means a function like `fn process-request(config) { ... }` can have `config` resolved at startup, leaving a function that takes only the runtime request and has a smaller (or zero) alloc footprint.
 
 ### 13. Blocks and Objects
 
@@ -555,6 +610,61 @@ fn example() {
     fibonacci()
 }
 ```
+
+### Alloc Effect and Multistage Sizing
+
+Alloc as effect + multistage + size propagation:
+
+```later
+# Comptime-static: all sizes known from source. No alloc effect.
+# This compiles to a fixed memory layout.
+fn distance(a, b) {
+    let dx = a.x - b.x
+    let dy = a.y - b.y
+    dx * dx + dy * dy
+}
+
+# Startup-static: sizes come from config. Alloc resolved at startup.
+# After startup, the connection pool is a fixed-size value.
+@startup
+fn init-server(config) {
+    let pool = Array(config.max-connections, { as i; Connection(i) })
+    let buf-pool = Array(config.max-connections, { as i; Buffer(config.buf-size) })
+
+    # Return a handler that uses the pre-allocated pools.
+    # This handler has NO alloc effect — everything is pre-sized.
+    fn handle-connection(conn) {
+        let buf = buf-pool checkout
+        defer { buf-pool checkin(buf) }
+        conn read(buf) await
+        buf parse-json
+    }
+}
+
+# Runtime-bounded: size depends on input, but computable.
+# The alloc effect is present but bounded.
+fn handle-upload(req) {
+    let buf = Buffer(req.content-length)
+    req read-body(buf) await
+    buf process
+}
+
+# Unbounded: truly dynamic. Full alloc effect. Growable containers.
+# Recursion itself is dynamic alloc (stack frames).
+fn flatten(tree) {
+    let mut results = []
+    results = results append(tree.value)
+    tree.children map({ as child; child flatten }) each({ as items
+        results = results concat(items)
+    })
+    results
+}
+```
+
+- **Recursion requires dynamic alloc** — each call is a stack frame
+- **Alloc handlers compile away** — they're type-level tracking, not runtime overhead
+- **Each stage resolves sizes** for the next: comptime → startup → runtime
+- A fully static program's entire memory footprint is known at compile time
 
 ## Target Platforms
 
