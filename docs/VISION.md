@@ -114,53 +114,107 @@ fn get-sum {
     ask("first?") + ask("second?")
 }
 
-# Handle it
-handle { get-sum } ask(prompt) {
-    print(prompt)
-    resume(42)
+# Handle it — Koka-style `with`, scopes over rest of block
+fn example() {
+    with ask(prompt) {
+        prompt print
+        resume(42)
+    }
+    get-sum()
+}
+```
+
+#### Handler Syntax
+
+Handlers use `with effect(args) { body }`. The handler scopes over the **rest of the current block** — no wrapping braces around the handled code.
+
+```later
+fn example() {
+    with error(e) {
+        log("caught: {e}")
+    }
+
+    do-stuff() ?        # handled by the `with` above
+    more-stuff() ?      # also handled
+}
+```
+
+Handlers can be nested. Inner handlers shadow outer ones within their block:
+
+```later
+fn example() {
+    with error(e) { log("outer: {e}") }
+
+    do-stuff() ?                    # outer handler
+
+    if condition {
+        with error(e) { log("inner: {e}") }
+        risky-thing() ?             # inner handler
+    }
+
+    other-stuff() ?                 # outer handler again
 }
 ```
 
 #### Resume Types
 
-The effect declaration specifies how `resume` can be used:
+The effect declaration specifies how `resume` can be used. The handler syntax is **symmetric** across all four cases — only `resume` availability differs:
 
 | Return type | `resume` in handler | Meaning |
 |-----------|---------------------|---------|
 | `: Never` | Not available | Abort/unwind |
-| `: T` | `FnOnce(T)` | Exactly once (default) |
-| `: T where resume: FnMut` | `FnMut(T)` | Zero or more, sequential |
-| `: T where resume: Fn` | `Fn(T)` | Zero or more, concurrent |
+| `: T` | Must call once | Exactly once (default) |
+| `: T where resume: Many` | Call zero or more | Sequential generator |
+| `: T where resume: Fork` | Call concurrently | Parallel exploration |
 
 ```later
-# Abort — no resume, triggers unwinding
+# Never — no resume (abort)
 effect fail(msg: String): Never
 
-handle { work() } fail(msg) {
-    print("caught: {msg}")
-    # no resume available
+fn example() {
+    with fail(msg) {
+        print("caught: {msg}")
+        # no resume available — handler returns directly
+    }
+    work()
 }
 
-# Generator — multiple sequential calls
-effect yield(value: Int): () where resume: FnMut
+# Once — resume exactly once (default)
+effect ask(prompt: String): Int
 
-handle { gen() } yield(v) {
-    print("got: {v}")
-    resume(())
+fn example() {
+    with ask(prompt) {
+        prompt print
+        resume(read-int())
+    }
+    ask("number?") + ask("another?")
 }
 
-# Fork — resume can be called concurrently (values must be Clone)
-effect choose(): Bool where resume: Fn
+# Many — resume zero or more times sequentially (generator)
+effect yield(value: Int): ()
 
-handle { choices() } choose() {
-    resume(true)
-    resume(false)
+fn example() {
+    with yield(v) {
+        print("got: {v}")
+        resume(())
+    }
+    generate-values()
+}
+
+# Fork — resume concurrently (values must be copyable)
+effect choose(): Bool
+
+fn example() {
+    with choose() {
+        resume(true)
+        resume(false)
+    }
+    explore-choices()
 }
 ```
 
 #### Built-in Effects
 
-- **`panic`** — a `Never` effect for unrecoverable errors
 - **`error`** — a `Never` effect for recoverable errors (used with `?`)
 - **`cancel`** — a `Never` effect for cancellation
 - **`alloc`** — heap memory allocation (see section 9)
@@ -399,16 +453,107 @@ value ?               # error propagation
 { a: 1, b: 2 }
 [1, 2, 3]
 
-# Effects
-effect ask(): Int
-handle { code } ask(prompt) { resume(42) }
+# Effects — declare and handle
+effect ask(prompt: String): Int
 
-# Defer
-defer { cleanup-code }
+with ask(prompt) {
+    prompt print
+    resume(read-int())
+}
+ask("number?")
 
-# Spawn
-spawn { work } as task
-task await
+# Defer — single-path cleanup
+defer { resource close await }
+
+# Spawn and structured concurrency
+nursery {
+    spawn { work-a() }
+    spawn { work-b() }
+}
+```
+
+## Showcase Examples
+
+These examples demonstrate how multiple features interact cohesively.
+
+### Async Server with Cleanup
+
+Linear types + defer + structured concurrency + await in cleanup:
+
+```later
+fn serve(addr) {
+    let sock = listen(addr)
+    defer { sock shutdown await }
+
+    nursery {
+        loop {
+            let conn = sock accept await
+            spawn {
+                defer { conn close await }
+                conn handle-request await
+            }
+        }
+    }
+}
+```
+
+- `sock` is affine+drop — `defer` provides the drop path
+- `defer` runs on any exit: normal, error, or cancellation
+- `await` inside `defer` works because cancellation is cooperative
+- `nursery` scopes all spawned tasks — when the loop exits, nursery waits for all children
+
+### Transaction with Must-Move Semantics
+
+Linear types + effect handlers + split cleanup paths:
+
+```later
+fn transfer(db, from, to, amount) {
+    let tx = db begin-transaction
+
+    with error(e) {
+        tx rollback await
+        throw(e)
+    }
+
+    tx execute("UPDATE accounts SET balance = balance - {amount} WHERE id = {from}") await ?
+    tx execute("UPDATE accounts SET balance = balance + {amount} WHERE id = {to}") await ?
+    tx commit await
+}
+```
+
+- `tx` is linear (no drop) — must be consumed exactly once
+- `with error(e)` handles the error path → rollback, then re-throw
+- If no error, happy path reaches `commit`
+- Compiler verifies `tx` is consumed on ALL exit paths
+
+### Generator via Effect
+
+Effects + resume + postfix application:
+
+```later
+effect yield(value: Int): ()
+
+fn fibonacci() {
+    let mut a = 0
+    let mut b = 1
+    loop {
+        yield(a)
+        let next = a + b
+        a = b
+        b = next
+    }
+}
+
+fn example() {
+    let mut count = 0
+    with yield(v) {
+        print("fib: {v}")
+        count = count + 1
+        if count < 10 { resume(()) }
+        # no resume = generator stops
+    }
+    fibonacci()
+}
 ```
 
 ## Target Platforms
