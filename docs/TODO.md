@@ -4,69 +4,63 @@ Immediate tasks for the current/next agent.
 
 ## Current State
 
-**332 failing E2E tests** — all fail with "later: not yet implemented"
+**332 tests exist but ALL need rewriting** — the syntax has fundamentally changed.
 
-**Design review completed** — see `docs/DESIGN-REVIEW.md`
+Major design revision completed 2026-02-09. See `docs/DESIGN-REVIEW.md` for full analysis and `docs/VISION.md` for the updated language design.
 
-## ACTIVE: Design Reconciliation (Spec Mode)
+## ACTIVE: Design Walkthrough with Max (Spec Mode)
 
-A comprehensive design review has been done. The review found:
+Walking through design contradictions one at a time. **Resolved so far:**
 
-### Must-resolve contradictions:
-1. **`{}` ambiguity** — `empty_object.later` and `block_empty.later` are the same code with different expected outputs
-2. **Comment syntax** — PLAN.md says `//`, everything else says `#`. PLAN.md is wrong.
-3. **Linear struct field access** — `linear_struct.later` moves fields via `.`, but `linear_field_move.later` says moving fields is an error
-4. **Linear list indexing** — `linear_list.later` indexes to consume, but `linear_list_move.later` says indexing linear lists is an error
-5. **Effect invocation** — some examples use `send X with Y`, others call effects like functions. Pick one.
-6. **Handler syntax** — 6 different syntactic forms across examples. Needs consolidation.
-7. **Effect declaration** — VISION.md uses `resume(T)` syntax, examples use simpler `: T` style
+1. ✅ **`{}` is always an object** — blocks after keywords use `{}`, standalone multi-statement uses `()`. Try smart disambiguation first, fall back to `()`.
+2. ✅ **Comments use `#`** — PLAN.md was wrong, now fixed.
+3. ✅ **Postfix juxtaposition replaces `|` pipe** — `x f` = `f(x)`, `x f(y)` = `f(x, y)`.
+4. ✅ **Implicit first argument** — functions have an implicit pipeline arg from raro. Explicit params are for extra args only.
+5. ✅ **Pipeline arg = runtime data** — explicit params can be lifted to earlier stages.
+6. ✅ **Effect invocation** — function-call style, not `send X with Y`.
+7. ✅ **Allocation as effect** — `alloc` effect for heap allocation.
+8. ✅ **Size taxonomy** — known/unknown × static/dynamic.
 
-### New features to design & spec (Max requested):
-8. **Allocation as an effect** — `alloc` effect for heap allocation, no-alloc code has no alloc effect
-9. **Static vs dynamic memory distinction** — known-size vs unknown-size, stack vs heap
-10. **Size taxonomy** — 2×2 matrix of known/unknown × static/dynamic
+**Still to walk through with Max:**
+- Handler syntax consolidation (6 different forms → 1 canonical form)
+- Linear struct field access (borrow vs move)
+- Linear list indexing
+- `{ x }` disambiguation rule
+- `as` for naming implicit arg
+- Postfix `.field` vs `.[n]` confirmation
+- Defer capture semantics
+- Chained comparisons
 
-### Waiting on Max to review:
-- `docs/DESIGN-REVIEW.md` — full analysis with resolution proposals
-- Max needs to make decisions on contradictions before tests can be fixed
-- After decisions, update VISION.md, fix conflicting examples/tests, add allocation tests
+## After Design Walkthrough
+
+1. **Rewrite all 332 example `.later` files** to use new syntax (postfix application, `#` comments, etc.)
+2. **Rewrite all 332 tests in `tests/e2e.rs`** to match new examples
+3. **Add new tests** for:
+   - Allocation effect (no-alloc functions, arena handlers)
+   - Size tracking (stack vs heap, known vs unknown)
+   - Implicit first argument
+   - Postfix application chains
+   - `()` for multi-statement expressions
+   - `?` postfix error propagation
+   - `await` as postfix function
+
+## Key Files
+
+- `docs/VISION.md` — **UPDATED** language design with postfix application, alloc effect, size taxonomy
+- `docs/PLAN.md` — **UPDATED** implementation roadmap with design decisions
+- `docs/DESIGN-REVIEW.md` — full analysis of contradictions (some still open)
+- `tests/e2e.rs` — 332 E2E tests (**ALL NEED REWRITING**)
+- `examples/*.later` — 332 example programs (**ALL NEED REWRITING**)
+- `src/main.rs` — stub (22 lines, just reads file and exits)
+- `raro.ignore/` — reference copy of raro (postfix application, running arithmetic)
+- `kal.ignore/` — reference copy of kal (effects, symbols, comment system)
 
 ## Handover Notes
 
-### What was done this session:
-- Read ALL 332 example files, all tests, VISION.md, PLAN.md, TODO.md
-- Identified 7 contradictions between VISION.md, PLAN.md, and examples
-- Analyzed allocation-as-effect design (Max's new wishlist item)
-- Wrote comprehensive design review in `docs/DESIGN-REVIEW.md`
-- Did NOT modify any tests or application code yet (waiting for Max's decisions)
+This session was a design reconciliation walkthrough with Max. The major outcome is that `later` now adopts raro's postfix function application model (implicit first arg, juxtaposition instead of `|` pipe). This is a fundamental syntax change that affects every single test and example file.
 
-### What the next agent should do:
-1. Read `docs/DESIGN-REVIEW.md` first
-2. Ask Max which resolutions he wants for each contradiction
-3. Update VISION.md with resolved decisions
-4. Fix conflicting examples and tests
-5. Write new tests for allocation-as-effect
-6. Continue in spec mode until design is clean
-
-### Key files:
-- `docs/DESIGN-REVIEW.md` — THE design reconciliation analysis
-- `docs/VISION.md` — language design (needs updating after review)
-- `docs/PLAN.md` — implementation roadmap (has some stale decisions)
-- `tests/e2e.rs` — 332 E2E tests (2314 lines)
-- `examples/*.later` — 332 example programs (test inputs)
-- `src/main.rs` — stub (22 lines, just reads file and exits)
-
-## Optional: More Spec Tests (lower priority)
-
-If continuing in spec mode after design reconciliation:
-- [ ] Allocation effect tests (no-alloc functions, arena handlers)
-- [ ] Size tracking tests (stack vs heap, known vs unknown)
-- [ ] Floats with exponents (1e10, 3.14e-5)
-- [ ] Hex/binary/octal literals
-- [ ] Raw strings (r"...")
-- [ ] Multi-line strings (""")
-- [ ] Range syntax (1..10, 1..=10)
-
-## Blocked
-
-- Everything blocked on Max reviewing `docs/DESIGN-REVIEW.md` and making design decisions
+The next agent should:
+1. Read `docs/VISION.md` — it's the source of truth
+2. Continue the design walkthrough if Max wants (remaining questions listed above)
+3. When design is settled, rewrite all tests and examples
+4. Reference `raro.ignore/` and `kal.ignore/` for the ancestor language designs

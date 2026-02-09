@@ -1,17 +1,17 @@
 # Later: A Language for Graceful Cleanup
 
-**later** is a programming language where cleanup is not an afterthought - it's intrinsic to how code composes.
+**later** is a programming language where cleanup is not an afterthought — it's intrinsic to how code composes.
 
 ## Core Principles
 
 ### 1. Linear Types by Default
 
-Every value must be consumed exactly once. This isn't a restriction - it's a guarantee. When you acquire a resource, you *will* clean it up. The compiler ensures this.
+Every value must be consumed exactly once. This isn't a restriction — it's a guarantee. When you acquire a resource, you *will* clean it up. The compiler ensures this.
 
 ```later
 let file = open("data.txt")
 # ... use file ...
-file | close   # must consume - compiler error if you forget
+file close   # must consume — compiler error if you forget
 ```
 
 **Consumption** means destructuring into parts. Only the type's implementation knows how to split itself up. Each part is then recursively consumed.
@@ -19,17 +19,67 @@ file | close   # must consume - compiler error if you forget
 **Auto-cleanup via `drop`**: Types can implement the `drop` symbol for automatic cleanup at scope end. This works when no extra information is needed (e.g., closing a file). Types that require a choice (e.g., commit vs rollback) deliberately don't implement `drop`, forcing explicit consumption.
 
 ```later
-# File has drop - auto-closes at scope end
+# File has drop — auto-closes at scope end
 let file = open("data.txt")
-file | read
+file read
 # file.drop() called automatically
 
-# Transaction has NO drop - must choose
+# Transaction has NO drop — must choose
 let tx = db.begin()
-tx | commit   # or tx | rollback - compiler error if you forget
+tx commit   # or tx rollback — compiler error if you forget
 ```
 
-### 2. Symbols
+**Linearity hierarchy**: Not all types have the same ownership requirements:
+- **Linear** (must consume exactly once, no drop): Transaction, unique tokens
+- **Affine with drop** (consumed at most once, drop called if not consumed): File, Connection
+- **Copyable** (can be used freely): Int, Float, Bool, String
+
+The compiler tracks which category each type belongs to. Integers and booleans are freely copyable — you don't need to "consume" `42`.
+
+### 2. Postfix Function Application
+
+Functions are called in **postfix** style. The primary argument flows left-to-right via juxtaposition (no pipe character needed):
+
+```later
+5 double          # = double(5) = 10
+5 add(3)          # = add(5, 3) = 8
+urls map(get) all await   # left-to-right chain
+```
+
+**Functions have an implicit first argument** — the value flowing from the left. Explicit parameters are only for *additional* arguments:
+
+```later
+# Implicit first arg only
+fn double { * 2 }
+5 double          # = 10
+
+# Implicit first arg + explicit extra params
+fn add(b) { + b }
+5 add(3)          # = 8
+
+# Name the implicit arg when needed
+fn process {
+    as x
+    if x > 10 { x * 2 } else { x + 1 }
+}
+
+# Anonymous blocks are functions too
+5 { * 2 }         # = 10
+paths map({ as path; "https://example.com/{path}" get })
+```
+
+**Pipeline arg = runtime data.** Explicit params can often be lifted to earlier stages (comptime/startup), leaving a function that just takes the runtime pipeline value.
+
+**Postfix operators:**
+- `.field` — field access
+- `.[n]` — index access
+- `?` — error propagation (send error effect if value is Err)
+
+```later
+get("api") await ? .[n] ? .thing ?
+```
+
+### 3. Symbols
 
 Symbols are unique, opaque values used for:
 - Effect names
@@ -45,76 +95,77 @@ obj[my-key]  # "secret"
 symbol("x") == symbol("x")  # false
 
 # Symbols can't be converted to strings (opaque)
-my-key | to-string  # ERROR
+my-key to-string  # ERROR
 
 # But debug() can show them (one-way door to I/O)
 debug(my-key)  # prints: Symbol(my-key)
 ```
 
-### 3. Effects (Koka-inspired)
+### 4. Effects (Koka-inspired)
 
 Effects are declared capabilities that code can use. Handlers provide implementations.
 
 ```later
 # Declare an effect
-effect ask(prompt: String): resume(Int)
+effect ask(prompt: String): Int
 
-# Use it (looks like a function call)
-fn get-sum() {
+# Use it (called like any function)
+fn get-sum {
     ask("first?") + ask("second?")
 }
 
 # Handle it
-handle ask(prompt) {
+handle { get-sum } ask(prompt) {
     print(prompt)
-    42  # implicit resume(42) for FnOnce
+    resume(42)
 }
-get-sum()
 ```
 
 #### Resume Types
 
 The effect declaration specifies how `resume` can be used:
 
-| Signature | `resume` in handler | Meaning |
+| Return type | `resume` in handler | Meaning |
 |-----------|---------------------|---------|
 | `: Never` | Not available | Abort/unwind |
-| `: resume(T)` | `FnOnce(T)` | Exactly once (implicit via return) |
-| `: resume(T) where resume: FnMut` | `FnMut(T)` | Zero or more, sequential |
-| `: resume(T) where resume: Fn` | `Fn(T)` | Zero or more, concurrent |
+| `: T` | `FnOnce(T)` | Exactly once (default) |
+| `: T where resume: FnMut` | `FnMut(T)` | Zero or more, sequential |
+| `: T where resume: Fn` | `Fn(T)` | Zero or more, concurrent |
 
 ```later
-# Abort - no resume, triggers unwinding
+# Abort — no resume, triggers unwinding
 effect fail(msg: String): Never
 
-handle fail(msg) {
+handle { work() } fail(msg) {
     print("caught: {msg}")
     # no resume available
 }
 
-# Generator - explicit resume, multiple sequential calls
-effect yield(value: Int): resume(()) where resume: FnMut
+# Generator — multiple sequential calls
+effect yield(value: Int): () where resume: FnMut
 
-handle yield(v) {
+handle { gen() } yield(v) {
     print("got: {v}")
-    resume(())  # explicit for FnMut
+    resume(())
 }
 
-# Fork - resume can be called concurrently (values must be Clone)
-effect choose(): resume(Bool) where resume: Fn
+# Fork — resume can be called concurrently (values must be Clone)
+effect choose(): Bool where resume: Fn
 
-handle choose() {
+handle { choices() } choose() {
     resume(true)
     resume(false)
 }
 ```
 
-#### FnMut vs Fn (Clone)
+#### Built-in Effects
 
-- `FnMut`: Multiple sequential resumes OK. Values at effect site can be mutable.
-- `Fn` (Clone): Multiple concurrent resumes. All captured values must be Clone. Creates parallel "timelines".
+- **`panic`** — a `Never` effect for unrecoverable errors
+- **`error`** — a `Never` effect for recoverable errors (used with `?`)
+- **`cancel`** — a `Never` effect for cancellation
+- **`alloc`** — heap memory allocation (see section 9)
 
-### 4. Cancellation & Structured Concurrency
+### 5. Cancellation & Structured Concurrency
 
 Cancellation is a `Never` effect that propagates through the task tree.
 
@@ -134,7 +185,7 @@ A
 
 1. D1's `Never` propagates up to C2
 2. C2 exits, propagates to B
-3. B has two children - must wait for both
+3. B has two children — must wait for both
 4. B triggers cancellation in C1 (at its deepest point)
 5. B waits for C1 to exit
 6. Only then does B propagate up to A
@@ -145,29 +196,13 @@ A
 
 #### DAG Stacks
 
-Tasks can form a DAG, not just a tree. One subtask can have multiple parents:
+Tasks can form a DAG, not just a tree. One subtask can have multiple parents. When a DAG-shared subtask cancels, **all parents are notified**.
 
-```later
-fn start-task1(subtask) { subtask | await + 1 }
-fn start-task2(subtask) { subtask | await + 3 }
-
-fn start-parent(dest) {
-    get-thingy-from(dest)  # returns a subtask
-    | split {
-        > start-task1 as t1
-        > start-task2 as t2
-    }
-    | await all
-}
-```
-
-When a DAG-shared subtask cancels, **all parents are notified**.
-
-### 5. Operator Precedence: None
+### 6. Operator Precedence: None
 
 **BODMAS is buried.** 🪦
 
-All operators evaluate left-to-right. Use `()` or `{}` to group.
+All operators evaluate left-to-right. Use `()` to group.
 
 ```later
 2 + 3 * 4      # = (2 + 3) * 4 = 20, not 14
@@ -176,7 +211,7 @@ true or false and false  # = (true or false) and false = false
 
 **Rationale**: "Write forward, evaluate forward." No mental backtracking to figure out what binds to what. You (or an LLM) can write code incrementally without needing to go back and add parentheses.
 
-### 6. Comments & Documentation
+### 7. Comments & Documentation
 
 ```later
 #! shebang (allowed because # is a comment)
@@ -238,18 +273,55 @@ let md = help(my-fn, "markdown")
 let html = help(my-fn, "html")
 ```
 
-Doc comments attach to the following code item as metadata. A documentation website can be generated by walking the module hierarchy and assembling doc comments with their natural heading structure. Your code *is* your documentation.
+### 8. Fallible Cleanup
 
-### 7. Fallible Cleanup
-
-Cleanup can fail. This is reality - disks get unplugged, networks go down. The type system acknowledges this.
+Cleanup can fail. This is reality — disks get unplugged, networks go down. The type system acknowledges this.
 
 When an error occurs during cleanup:
 - The first error wins (becomes the propagated error)
 - Cleanup errors are logged
 - All cleanup still runs
 
-### 8. Composable Cleanup
+### 9. Memory Allocation as an Effect
+
+Memory allocation is an effect. Code that doesn't allocate doesn't have the `alloc` effect — the type system tracks this.
+
+```later
+# Pure computation — no alloc effect
+fn add(b) { + b }
+
+# Stack allocation of known-size values — no alloc effect needed
+fn make-point(x, y) { { x, y } }
+
+# Heap allocation — requires alloc effect
+fn make-list(items) {
+    items to-list  # needs alloc
+}
+```
+
+#### Size Taxonomy
+
+Four categories, forming a 2×2 matrix:
+
+|                  | Known size          | Unknown size         |
+|------------------|--------------------|-----------------------|
+| **Static alloc** | Stack / inline     | Bounded (MaxSize)     |
+| **Dynamic alloc**| Fixed heap alloc   | Growable (Vec-like)   |
+
+- **Known + Static**: `[u8; 64]` — size known at compile time, stack allocated
+- **Known + Dynamic**: Size known but too large for stack — heap allocated, fixed
+- **Unknown + Bounded**: `List(MaxSize(100))` — max size known, can pre-allocate
+- **Unknown + Dynamic**: Growable containers — requires `alloc` effect
+
+Stack allocation of known-size values doesn't require the alloc effect. Only heap/dynamic allocation does. The compiler needs to know sizes at compile time to determine whether alloc is needed.
+
+#### Interaction with Stages
+
+- **Comptime**: No alloc (or special comptime allocator)
+- **Startup**: Alloc allowed. Sizes may come from config. Memory can be pre-allocated.
+- **Runtime**: Full alloc. This is where the `alloc` effect matters most.
+
+### 10. Composable Cleanup
 
 Cleanup behavior emerges from how primitives compose:
 - **Scope**: multiple resources clean up in reverse acquisition order
@@ -257,14 +329,14 @@ Cleanup behavior emerges from how primitives compose:
 - **Collection**: collection cleanup cleans up all elements
 - **Task**: task cleanup includes all owned resources
 
-### 9. Upward-Propagating Memory Information
+### 11. Upward-Propagating Memory Information
 
 Types can carry information about their memory footprint. This propagates upward through composition, enabling:
 - Compile-time memory allocation when sizes are static
 - Startup-time allocation when sizes depend on config
 - Runtime allocation as a fallback
 
-### 10. Multistage Programming
+### 12. Multistage Programming
 
 Building is running. The program executes in stages:
 
@@ -273,6 +345,29 @@ Building is running. The program executes in stages:
 3. **Runtime**: actual execution
 
 Like Zig's comptime, but with arbitrary stages.
+
+### 13. Blocks and Objects
+
+**`{}` is always an object literal.** Even empty `{}` is an empty object.
+
+**Blocks** appear after keywords (`if`, `fn`, `loop`, `defer`, `handle`, `spawn`, `nursery`, `@comptime`, `@startup`). These keyword-introduced blocks use `{}` — the keyword disambiguates.
+
+**Standalone multi-statement expressions** use `()`:
+```later
+let x = (
+    let a = 1
+    let b = 2
+    a + b
+)
+```
+
+**Smart disambiguation (preferred over `()`)**: When `{` appears in expression position without a keyword, the parser can often determine from the first tokens whether it's an object or not:
+- `{ key:` → object
+- `{ ...expr` → object spread
+- `{ [expr]:` → computed key object
+- `{ identifier,` → object shorthand
+
+Note: `{ x }` is ambiguous (object shorthand `{x: x}` vs single-expression block). Object keys may be arbitrary expressions (`key_expr: value_expr`), which adds complexity. Fall back to `()` for multi-statement expressions if disambiguation fails.
 
 ## Syntax Summary
 
@@ -285,30 +380,46 @@ Like Zig's comptime, but with arbitrary stages.
 let x = 42
 let mut y = 0
 
-# Functions
-fn add(a, b) { a + b }
-fn double(x) x * 2     # single-expression
+# Functions (implicit first arg)
+fn double { * 2 }
+fn add(b) { + b }
+fn process { as x; x + 1 }
 
-# Pipe (left-to-right)
-x | f | g              # = g(f(x))
+# Postfix application (left-to-right)
+5 double              # = 10
+5 add(3)              # = 8
+x f g(y) h            # = h(g(f(x), y))
+
+# Postfix operators
+obj.field             # field access
+list.[n]              # index access
+value ?               # error propagation
 
 # Objects and lists
 { a: 1, b: 2 }
 [1, 2, 3]
 
 # Effects
-effect ask(): resume(Int)
-handle ask() { 42 }
+effect ask(): Int
+handle { code } ask(prompt) { resume(42) }
 
 # Defer
 defer { cleanup-code }
 
 # Spawn
 spawn { work } as task
-task | await
+task await
 ```
 
 ## Target Platforms
 
 - Native (primary)
-- WASM (first-class support - cancellation via flag checking works here)
+- WASM (first-class support — cancellation via flag checking works here)
+
+## Ancestry
+
+`later` inherits from two earlier language experiments:
+- **kal** — effects for IO/generators/errors, symbols, `#` comment system, `send`/`handle`, multistage
+- **raro** — postfix function application, left-to-right precedence, `as` bindings, kebab-case, implicit first argument
+
+Reference copies of both are in `kal.ignore/` and `raro.ignore/`.

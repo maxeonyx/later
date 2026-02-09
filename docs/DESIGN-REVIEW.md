@@ -1,9 +1,30 @@
 # Design Reconciliation Review
 
-**Date**: 2026-02-08
-**Status**: Analysis complete, awaiting Max's review before updating VISION.md
+**Date**: 2026-02-08, updated 2026-02-09
+**Status**: Walkthrough with Max in progress. VISION.md and PLAN.md updated. Tests not yet rewritten.
 
-This document captures contradictions, gaps, and design decisions found by reviewing all 332 example files, the test suite, and VISION.md together. The goal is to reconcile everything into a coherent design before updating VISION.md.
+This document captures contradictions, gaps, and design decisions found by reviewing all 332 example files, the test suite, and VISION.md together.
+
+## Resolution Status
+
+| # | Issue | Status |
+|---|-------|--------|
+| 1a | Comment syntax `#` vs `//` | ✅ RESOLVED — `#` is correct, PLAN.md was wrong |
+| 1b | Effect declaration syntax | ✅ RESOLVED — simple `: T` style, not `resume(T)` |
+| 1c | Handler syntax (6 forms) | ⏳ OPEN — needs consolidation, not yet discussed |
+| 1d | Effect invocation `send` vs fn-call | ✅ RESOLVED — function-call style |
+| 2a | Effect declaration vs symbol | ⏳ OPEN — not yet discussed |
+| 2b | `panic` as built-in effect | ✅ RESOLVED — yes, built-in Never effect |
+| 2c | Compile-time effect tracking | ⏳ OPEN — confirms full effect type system needed |
+| 3a | What makes a type linear | ✅ RESOLVED — linearity hierarchy (linear/affine+drop/copyable) |
+| 3b | Linear struct field access | ⏳ OPEN — dot borrows, destructuring moves (proposed) |
+| 3c | Linear list indexing | ⏳ OPEN — needs special iteration/destructuring |
+| 4 | Allocation as effect | ✅ RESOLVED — `alloc` effect, size taxonomy |
+| 5 | `{}` ambiguity | ✅ RESOLVED — `{}` always object, `()` for standalone blocks |
+| 6 | Comment syntax | ✅ RESOLVED — same as 1a |
+| NEW | Postfix application | ✅ RESOLVED — juxtaposition replaces `|` pipe |
+| NEW | Implicit first argument | ✅ RESOLVED — raro-style, explicit params for extras only |
+| NEW | Pipeline = runtime data | ✅ RESOLVED — explicit params liftable to earlier stages |
 
 ## Table of Contents
 
