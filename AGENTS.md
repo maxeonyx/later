@@ -31,7 +31,7 @@ This is a test-first development project. Your job is to:
 
 ## Current Status
 
-**326 failing E2E tests** - Comprehensive specification complete.
+**332 failing E2E tests** - Comprehensive specification complete.
 
 The test suite covers the entire language as described in VISION.md:
 - Basic syntax (expressions, bindings, functions, objects, lists)
@@ -115,7 +115,7 @@ later/
     main.rs       # Entry point (reads file, runs interpreter)
     lib.rs        # Library root (currently empty)
   tests/
-    e2e.rs        # 218 E2E tests
+    e2e.rs        # 332 E2E tests
   examples/
     *.later       # 150+ example programs (test inputs)
   docs/
